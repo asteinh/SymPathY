@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:version="1.0beta2 (2b71d25, 2019-12-03)"
+   sodipodi:docname="hello_world_2.svg"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg846">
+  <sodipodi:namedview
+     inkscape:current-layer="layer1"
+     inkscape:window-maximized="1"
+     inkscape:window-y="23"
+     inkscape:window-x="0"
+     inkscape:cy="248.668236526634"
+     inkscape:cx="228.3099797850396"
+     inkscape:zoom="0.7593351192008388"
+     showgrid="false"
+     id="namedview1434"
+     inkscape:window-height="729"
+     inkscape:window-width="1280"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     inkscape:document-rotation="0"
+     bordercolor="#666666"
+     pagecolor="#ffffff" />
+  <defs
+     id="defs840" />
+  <metadata
+     id="metadata843">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1">
+    <path
+       id="path1999"
+       d="M 78.96071891501017,24.09359620926854 C 109.6211169645984,16.73871338972799 90.48636014647772,5.040949043596133 86.17857142857137,9.82738095238095 79.37499999999998,17.38690476190474 94.56964285714281,89.2023809523809 94.56964285714281,89.2023809523809 l 15.11904761904769,-24.19047619047619 10.5833333333334,23.43452380952377 c 0,0 13.7922098962341,-48.3809523809523 16.0600670390911,-69.54761904761892 2.2678571428573,-21.166666666666664 -32.9125982442079,-1.65456331712871 -9.4780744346841,13.46448430191893 23.4345238095238,15.11904761904762 38.8782231130069,2.30719171684465 38.8782231130069,2.30719171684465"
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       id="path1409"
+       d="m 27.07162715906175,9.784721347548316 c 0,0 11.48194426950968,68.078373890546927 0.14265855522395,79.417659604832593 C 15.875,100.5416666666667 15.85367019758368,52.16071428571429 40.80009876901227,51.40476190476191 65.74652734044076,50.64880952380953 52.50669577256601,-34.75247972139322 46.45907672494698,27.23561551670204 40.41145767732793,89.22371075479725 49.81086296403692,103.4014878328358 64.17395820213218,85.2586306899787"
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+  </g>
+</svg>
