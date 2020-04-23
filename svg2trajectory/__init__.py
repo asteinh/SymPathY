@@ -1,1 +1,1 @@
-from .parser import Parser
+from svg2trajectory.parser import Parser
