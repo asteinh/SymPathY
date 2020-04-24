@@ -1,15 +1,14 @@
 from svg.path import Path
-from svg2trajectory.elements import *
+from svg2trajectory.elements import SymbolicMixin
+from svg2trajectory.elements import SymbolicMove, SymbolicLine, SymbolicCubicBezier
 import casadi as cas
 import numpy as np
-from bisect import bisect
 
 
-class SymbolicPath(Path):
+class SymbolicPath(SymbolicMixin, Path):
     def __init__(self, path):
-        super().__init__()
-
-        self._s = cas.SX.sym('s')
+        Path.__init__(self)
+        SymbolicMixin.__init__(self)
 
         # build path from segments
         for seg in path._segments:
@@ -72,10 +71,8 @@ class SymbolicPath(Path):
             k = cas.Function('kappa', [self._s], [kappa])
             return np.float(k(s))
 
-    # TODO
-    def resize(self, start=[0, 0], end=[1, None]):
-        pass
-
-    # TODO
-    def rotate(self, angle):
-        pass
+    # def resize(self, start=[0, 0], end=[1, None]):
+    #     pass
+    #
+    # def rotate(self, angle):
+    #     pass
