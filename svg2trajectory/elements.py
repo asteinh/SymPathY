@@ -22,16 +22,14 @@ class SymbolicMixin(object):
 class SymbolicElement(SymbolicMixin):
     def __init__(self, base):
         SymbolicMixin.__init__(self)
-
         self.start = cas.DM([base.start.real, -base.start.imag])
         self.end = cas.DM([base.end.real, -base.end.imag])
+        self._expr = self.point(self._s)
 
 
 class SymbolicLine(SymbolicElement, Line):
     def __init__(self, base):
         SymbolicElement.__init__(self, base)
-
-        self._expr = self.point(self._s)
 
     def length(self, **kwargs):
         return float(cas.norm_2(self.end-self.start))
@@ -39,11 +37,9 @@ class SymbolicLine(SymbolicElement, Line):
 
 class SymbolicCubicBezier(SymbolicElement, CubicBezier):
     def __init__(self, base):
-        SymbolicElement.__init__(self, base)
-
         self.control1 = cas.DM([base.control1.real, -base.control1.imag])
         self.control2 = cas.DM([base.control2.real, -base.control2.imag])
-        self._expr = self.point(self._s)
+        SymbolicElement.__init__(self, base)
 
     def length(self, **kwargs):
         return float(self.arclength(1.0))
@@ -68,14 +64,13 @@ class SymbolicMove(SymbolicElement, Move):
     def __init__(self, base):
         SymbolicElement.__init__(self, base)
 
-        self._expr = self.point(self._s)
+    def length(self, **kwargs):
+        return 0.0
 
 
 class SymbolicClose(SymbolicElement, Close):
     def __init__(self, base):
         SymbolicElement.__init__(self, base)
 
-        self._expr = self.point(self._s)
-
     def length(self, **kwargs):
-        return float(cas.norm_2(self.end-self.start))
+        return 0.0
