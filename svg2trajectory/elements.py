@@ -1,4 +1,4 @@
-from svg.path import Line, CubicBezier, Move
+from svg.path import Line, CubicBezier, Move, Close
 import casadi as cas
 
 
@@ -34,7 +34,7 @@ class SymbolicLine(SymbolicElement, Line):
         self._expr = self.point(self._s)
 
     def length(self, **kwargs):
-        return float(cas.sqrt(cas.sum1((self.end-self.start)**2)))
+        return float(cas.norm_2(self.end-self.start))
 
 
 class SymbolicCubicBezier(SymbolicElement, CubicBezier):
@@ -54,14 +54,14 @@ class SymbolicCubicBezier(SymbolicElement, CubicBezier):
 #         SymbolicElement.__init__(self, base)
 #
 #         self.control = cas.DM([base.control.real, -base.control.imag])
-#         self._expr = QuadraticBezier.point(self._s)
+#         self._expr = self.point(self._s)
 
 
 # class SymbolicArc(SymbolicElement, Arc):
 #     def __init__(self, base):
 #         SymbolicElement.__init__(self, base)
 #
-#         self._expr = Arc.point(self._s)
+#         self._expr = self.point(self._s)
 
 
 class SymbolicMove(SymbolicElement, Move):
@@ -71,8 +71,11 @@ class SymbolicMove(SymbolicElement, Move):
         self._expr = self.point(self._s)
 
 
-# class SymbolicClose(SymbolicElement, Close):
-#     def __init__(self, base):
-#         SymbolicElement.__init__(self, base)
-#
-#         self._expr = Close.point(self._s)
+class SymbolicClose(SymbolicElement, Close):
+    def __init__(self, base):
+        SymbolicElement.__init__(self, base)
+
+        self._expr = self.point(self._s)
+
+    def length(self, **kwargs):
+        return float(cas.norm_2(self.end-self.start))

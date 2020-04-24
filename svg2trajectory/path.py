@@ -1,6 +1,6 @@
 from svg.path import Path
 from svg2trajectory.elements import SymbolicMixin
-from svg2trajectory.elements import SymbolicMove, SymbolicLine, SymbolicCubicBezier
+from svg2trajectory.elements import SymbolicMove, SymbolicLine, SymbolicCubicBezier, SymbolicClose
 import casadi as cas
 import numpy as np
 

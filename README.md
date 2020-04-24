@@ -1,9 +1,9 @@
 # svg2trajectory
-Parses paths of an SVG to trajectories.
+Parses paths of an SVG to (symbolic) trajectories. Easily (re-)sample the trajectory and obtain various other characteristics, like a Frenet–Serret frame or the path's curvature:
 
-`pip install -r requirements.txt`
+![](docs/img/racetrack.png)
 
-For a minimal example, run:
-```bash
-python examples/hello_world.py
-```
+## Get started
+This little tool is written for Python 3. Make sure to fetch all dependencies: `pip install -r requirements.txt`
+
+To get started, check out the examples!
