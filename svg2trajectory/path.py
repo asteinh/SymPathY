@@ -41,25 +41,36 @@ class SymbolicPath(Path):
     def length(self):
         return np.float(Path.length(self))
 
-    def tangent(self, s, length=1):
-        dp_ds = cas.Function('dp_ds', [self._s], [cas.jacobian(self._expr, self._s)])
-        t = dp_ds(s)
-        if length:
-            t *= length / cas.sqrt(cas.sum1(t[0]**2 + t[1]**2))
-        return np.array(t).flatten()
+    def tangent(self, s=None):
+        # unit tangent vector
+        dp_ds = cas.jacobian(self._expr, self._s)
+        tangent = dp_ds / cas.norm_2(dp_ds)
+        if s is None:
+            return tangent
+        else:
+            t = cas.Function('tangent', [self._s], [tangent])
+            return np.array(t(s)).flatten()
 
-    def normal(self, s, length=1):
-        dp_ds = cas.Function('dp_ds', [self._s], [cas.jacobian(self._expr, self._s)])
-        ddp_dds = cas.Function('ddp_dds', [self._s], [cas.jacobian(dp_ds(self._s), self._s)])
-        t = self.tangent(s, length=1)
-        n = ddp_dds(s) - cas.dot(ddp_dds(s), t) * t
-        if length:
-            n *= length / cas.sqrt(cas.sum1(n[0]**2 + n[1]**2))
-        return np.array(n).flatten()
+    def normal(self, s=None):
+        # unit normal vector
+        dt_ds = cas.jacobian(self.tangent(), self._s)
+        normal = dt_ds/cas.norm_2(dt_ds)
+        if s is None:
+            return normal
+        else:
+            n = cas.Function('normal', [self._s], [normal])
+            return np.array(n(s)).flatten()
 
-    # def curvature(self, s):
-    #     t = self.tangent(s, length=None)
-    #     kappa = cas.dot()/cas.sqrt(cas.sum1(t[0]**2 + t[1]**2))
+    def curvature(self, s):
+        # curvature value
+        dp_ds = cas.jacobian(self._expr, self._s)
+        dt_ds = cas.jacobian(self.tangent(), self._s)
+        kappa = cas.norm_2(dt_ds) / cas.norm_2(dp_ds)
+        if s is None:
+            return kappa
+        else:
+            k = cas.Function('kappa', [self._s], [kappa])
+            return np.float(k(s))
 
     # TODO
     def resize(self, start=[0, 0], end=[1, None]):
