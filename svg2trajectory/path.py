@@ -15,61 +15,81 @@ class SymbolicPath(SymbolicMixin, Path):
             clss = 'Symbolic' + seg.__class__.__name__
             self._segments.append(globals()[clss](seg))
 
-        # build composite symbolic expression
-        self._expr = self._composite_path()
+        self.__symbolic_setup()
 
-    def _composite_path(self):
+    def __symbolic_setup(self):
+        # build composite symbolic expression
         self._calc_lengths()
-        expr = cas.SX.nan(2, 1)
+        expr = cas.MX.nan(2, 1)
         for i in range(len(self._segments)-1, -1, -1):
             s_max = self._fractions[i]
             if s_max <= 0.0:
-                expr = cas.if_else(self._s < 0.0, cas.SX.nan(2, 1), expr)
+                expr = cas.if_else(self._s < 0.0, cas.MX.nan(2, 1), expr)
                 break
             else:
                 s_min = self._fractions[i-1] if i > 0 else 0
                 s_loc = (self._s - s_min) / self._lengths[i]
-                fcn = cas.Function('seg', [self._segments[i]._s], [self._segments[i]._expr])
-                expr = cas.if_else(self._s <= s_max, fcn(s_loc), expr)
-        return expr
+                expr = cas.if_else(self._s <= s_max, self._segments[i].point(s_loc), expr)
+        self._point_expr = expr
+        self._point = cas.Function('point', [self._s], [self._point_expr])
 
-    def point(self, s):
-        p = Path.point(self, s)
-        return np.array(p).flatten()
+        dp_ds = cas.jacobian(self._point_expr, self._s)
+        # unit tangent vector
+        self._tangent_expr = dp_ds / cas.norm_2(dp_ds)
+        self._tangent = cas.Function('tangent', [self._s], [self._tangent_expr])
+        dt_ds = cas.jacobian(self._tangent_expr, self._s)
+        # unit normal vector
+        self._normal_expr = dt_ds / cas.norm_2(dt_ds)
+        self._normal = cas.Function('normal', [self._s], [self._normal_expr])
+        # curvature value
+        self._curvature_expr = cas.norm_2(dt_ds) / cas.norm_2(dp_ds)
+        self._curvature = cas.Function('curvature', [self._s], [self._curvature_expr])
+
+    def __maybe_map_function(self, fcn, s):
+        s_ = np.asarray(s).flatten()
+        N = np.size(s_)
+        fcn_ = fcn.map(N) if N > 1 else fcn
+        return fcn_(s_)
+
+    def natural_parametrization(self, on=True):
+        if on:
+            for seg in self._segments:
+                seg._natural_parametrization = True
+        else:
+            for seg in self._segments:
+                seg._natural_parametrization = False
+        self.__symbolic_setup()
 
     def length(self):
         return np.float(Path.length(self))
 
-    def tangent(self, s=None):
-        # unit tangent vector
-        dp_ds = cas.jacobian(self._expr, self._s)
-        tangent = dp_ds / cas.norm_2(dp_ds)
+    def point(self, s=None):
         if s is None:
-            return tangent
+            return self._point_expr
         else:
-            t = cas.Function('tangent', [self._s], [tangent])
-            return np.array(t(s)).flatten()
+            p = self.__maybe_map_function(self._point, s)
+            return np.array(p)
+
+    def tangent(self, s=None):
+        if s is None:
+            return self._tangent_expr
+        else:
+            t = self.__maybe_map_function(self._tangent, s)
+            return np.array(t)
 
     def normal(self, s=None):
-        # unit normal vector
-        dt_ds = cas.jacobian(self.tangent(), self._s)
-        normal = dt_ds/cas.norm_2(dt_ds)
         if s is None:
-            return normal
+            return self._normal_expr
         else:
-            n = cas.Function('normal', [self._s], [normal])
-            return np.array(n(s)).flatten()
+            n = self.__maybe_map_function(self._normal, s)
+            return np.array(n)
 
-    def curvature(self, s):
-        # curvature value
-        dp_ds = cas.jacobian(self._expr, self._s)
-        dt_ds = cas.jacobian(self.tangent(), self._s)
-        kappa = cas.norm_2(dt_ds) / cas.norm_2(dp_ds)
+    def curvature(self, s=None):
         if s is None:
-            return kappa
+            return self._curvature_expr
         else:
-            k = cas.Function('kappa', [self._s], [kappa])
-            return np.float(k(s))
+            c = self.__maybe_map_function(self._curvature, s)
+            return np.array(c)
 
     # def resize(self, start=[0, 0], end=[1, None]):
     #     pass
