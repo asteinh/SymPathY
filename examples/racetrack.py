@@ -21,11 +21,13 @@ s = plt.scatter(p[0, :], p[1, :], c=c, s=20, cmap='RdYlGn', norm=normalize, mark
 cbar = plt.colorbar(s)
 cbar.ax.set_ylabel('Curvature')
 
+path.natural_parametrization()
+
 N = 100
 s = np.linspace(0, 1, N)
 
 p = path.point(s)
-t = 3*path.tangent(s)
+t = 5*path.tangent(s)
 n = 3*path.normal(s)
 
 for i in range(N):
@@ -33,5 +35,5 @@ for i in range(N):
     plt.arrow(p[0, i], p[1, i], n[0, i], n[1, i], color='gray', zorder=1)
 
 plt.axis('equal')
-plt.grid()
+# plt.grid()
 plt.show()
