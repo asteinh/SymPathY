@@ -53,20 +53,35 @@ class SymbolicElement(SymbolicMixin):
     def length(self, **kwargs):
         return float(self.arclength(1.0))
 
+    def matrix(self, a, b, c, d, e, f):
+        rot = cas.DM([[a, c, e], [b, d, f]])
+        self.start = rot@self.start
+        self.end = rot@self.end
+
     def translate(self, dx, dy=0):
         delta = cas.DM([dx, dy])
         self.start += delta
         self.end += delta
 
     def rotate(self, theta, x=0, y=0):
-        rot = cas.DM(2, 2)
-        rot[0, :] = [+cas.cos(theta / 180 * cas.pi), -cas.sin(theta / 180 * cas.pi)]
-        rot[1, :] = [+cas.sin(theta / 180 * cas.pi), +cas.cos(theta / 180 * cas.pi)]
+        rot = cas.DM([[+cas.cos(theta / 180 * cas.pi), -cas.sin(theta / 180 * cas.pi)],
+                      [+cas.sin(theta / 180 * cas.pi), +cas.cos(theta / 180 * cas.pi)]])
 
         self.translate(dx=-x, dy=-y)
         self.start = rot@self.start
         self.end = rot@self.end
         self.translate(dx=+x, dy=+y)
+
+    def scale(self, x, y=None):
+        if y is None:
+            y = x
+        raise NotImplementedError  # TODO
+
+    def skewX(self, theta):
+        raise NotImplementedError  # TODO
+
+    def skewY(self, theta):
+        raise NotImplementedError  # TODO
 
 
 class SymbolicLine(SymbolicElement, Line):
@@ -126,22 +141,19 @@ class SymbolicArc(SymbolicElement, Arc):
         sinr = cas.sin(self.rotation * cas.pi / 180)
         radius = self.radius * self.radius_scale
 
-        p = cas.MX.nan(2, 1)
-        p[0] = cosr * cas.cos(angle) * radius[0] - sinr * cas.sin(angle) * radius[1] + self.center[0]
-        p[1] = sinr * cas.cos(angle) * radius[0] + cosr * cas.sin(angle) * radius[1] + self.center[1]
+        p = cas.MX([[cosr * cas.cos(angle) * radius[0] - sinr * cas.sin(angle) * radius[1] + self.center[0]],
+                    [sinr * cas.cos(angle) * radius[0] + cosr * cas.sin(angle) * radius[1] + self.center[1]]])
         return p
 
     def translate(self, dx, dy=0):
-        if dx != 0 or dy != 0:
-            delta = cas.DM([dx, dy])
-            self.start += delta
-            self.center += delta
-            self.end += delta
+        delta = cas.DM([dx, dy])
+        self.start += delta
+        self.center += delta
+        self.end += delta
 
     def rotate(self, theta, x=0, y=0):
-        rot = cas.DM(2, 2)
-        rot[0, :] = [+cas.cos(theta * cas.pi / 180), -cas.sin(theta * cas.pi / 180)]
-        rot[1, :] = [+cas.sin(theta * cas.pi / 180), +cas.cos(theta * cas.pi / 180)]
+        rot = cas.DM([[+cas.cos(theta / 180 * cas.pi), -cas.sin(theta / 180 * cas.pi)],
+                      [+cas.sin(theta / 180 * cas.pi), +cas.cos(theta / 180 * cas.pi)]])
 
         self.translate(dx=-x, dy=-y)
         self.start = rot@self.start

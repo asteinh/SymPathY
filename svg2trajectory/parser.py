@@ -15,8 +15,8 @@ class Parser():
         self.paths = []
         for xml in xml_paths:
             path = self.__parse_path(xml)
-            transforms = self.__parse_transforms(xml)
-            for t in reversed(transforms):
+            transform = self.__parse_transform(xml)
+            for t in reversed(transform):
                 getattr(path, t['type'])(**t['kwargs'])
             self.paths.append(path)
 
@@ -24,7 +24,7 @@ class Parser():
         str = xml.get('d')
         return SymbolicPath(parse_path(str))
 
-    def __parse_transforms(self, xml):
+    def __parse_transform(self, xml):
         str = xml.get('transform')
         res = []
         if not str:
@@ -34,12 +34,22 @@ class Parser():
             transform = match.groups()[0]
             argstr = match.groups()[1]
 
-            if transform == 'translate':
+            if transform == 'matrix':
+                vals = re.findall("(-?\\d+\\.?\\d*)", argstr)
+                res.append({
+                    'type': 'matrix',
+                    'kwargs': {
+                        'a': float(vals[0]), 'b': float(vals[1]), 'c': float(vals[2]),
+                        'd': float(vals[3]), 'e': float(vals[4]), 'f': float(vals[5])
+                    }
+                })
+
+            elif transform == 'translate':
                 vals = re.findall("(-?\\d+\\.?\\d*)", argstr)
                 if len(vals) == 2:
                     res.append({'type': 'translate', 'kwargs': {'dx': float(vals[0]), 'dy': float(vals[1])}})
                 else:
-                    res.append({'type': 'translate', 'kwargs': {'dx': float(vals[0]), 'dy': 0.0}})
+                    res.append({'type': 'translate', 'kwargs': {'dx': float(vals[0])}})
 
             elif transform == 'rotate':
                 vals = re.findall("(-?\\d+\\.?\\d*)", argstr)
@@ -49,11 +59,25 @@ class Parser():
                         'kwargs': {'theta': float(vals[0]), 'x': float(vals[1]), 'y': float(vals[2])}
                     })
                 else:
-                    res.append({'type': 'rotate', 'kwargs': {'theta': float(vals[0]), 'x': 0.0, 'y': 0.0}})
+                    res.append({'type': 'rotate', 'kwargs': {'theta': float(vals[0])}})
+
+            elif transform == 'scale':
+                vals = re.findall("(-?\\d+\\.?\\d*)", argstr)
+                if len(vals) == 2:
+                    res.append({'type': 'scale', 'kwargs': {'x': float(vals[0]), 'y': float(vals[1])}})
+                else:
+                    res.append({'type': 'scale', 'kwargs': {'x': float(vals[0])}})
+
+            elif transform == 'skewX':
+                vals = re.findall("(-?\\d+\\.?\\d*)", argstr)
+                res.append({'type': 'skewX', 'kwargs': {'theta': float(vals[0])}})
+
+            elif transform == 'skewY':
+                vals = re.findall("(-?\\d+\\.?\\d*)", argstr)
+                res.append({'type': 'skewY', 'kwargs': {'theta': float(vals[0])}})
 
             else:
-                # TODO parse other transformations
-                pass
+                raise NotImplementedError
 
         return res
 
