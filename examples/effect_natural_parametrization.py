@@ -2,7 +2,7 @@ from svg2trajectory import Parser
 import matplotlib.pyplot as plt
 import numpy as np
 
-paths = Parser('examples/svg/test_curves.svg')
+paths = Parser('examples/svg/two_cubic_beziers.svg')
 for i, path in enumerate(paths):
     if i == 1:
         path.natural_parametrization()
@@ -15,6 +15,7 @@ for i, path in enumerate(paths):
 
     plt.plot(p[0, :], p[1, :], 'r.', zorder=1)
 
+plt.gca().invert_yaxis()
 plt.axis('equal')
 plt.grid()
 plt.show()

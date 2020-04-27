@@ -1,4 +1,4 @@
-from svg.path import Line, CubicBezier, Move, Close
+from svg.path import Line, CubicBezier, QuadraticBezier, Arc, Move, Close
 import casadi as cas
 
 
@@ -29,8 +29,8 @@ class SymbolicMixin(object):
 class SymbolicElement(SymbolicMixin):
     def __init__(self, base, expr_from=None):
         SymbolicMixin.__init__(self)
-        self.start = cas.DM([base.start.real, -base.start.imag])
-        self.end = cas.DM([base.end.real, -base.end.imag])
+        self.start = cas.DM([base.start.real, base.start.imag])
+        self.end = cas.DM([base.end.real, base.end.imag])
         if expr_from:
             self._expr = expr_from(self, self._s)
         else:
@@ -50,6 +50,24 @@ class SymbolicElement(SymbolicMixin):
         fcn = cas.Function('fcn', [self._s, s_noli], [self.arclength(self._s) - s_noli*self.length()])
         return cas.rootfinder('r', 'newton', fcn)
 
+    def length(self, **kwargs):
+        return float(self.arclength(1.0))
+
+    def translate(self, dx, dy=0):
+        delta = cas.DM([dx, dy])
+        self.start += delta
+        self.end += delta
+
+    def rotate(self, theta, x=0, y=0):
+        rot = cas.DM(2, 2)
+        rot[0, :] = [+cas.cos(theta / 180 * cas.pi), -cas.sin(theta / 180 * cas.pi)]
+        rot[1, :] = [+cas.sin(theta / 180 * cas.pi), +cas.cos(theta / 180 * cas.pi)]
+
+        self.translate(dx=-x, dy=-y)
+        self.start = rot@self.start
+        self.end = rot@self.end
+        self.translate(dx=+x, dy=+y)
+
 
 class SymbolicLine(SymbolicElement, Line):
     def __init__(self, base):
@@ -61,8 +79,8 @@ class SymbolicLine(SymbolicElement, Line):
 
 class SymbolicCubicBezier(SymbolicElement, CubicBezier):
     def __init__(self, base):
-        self.control1 = cas.DM([base.control1.real, -base.control1.imag])
-        self.control2 = cas.DM([base.control2.real, -base.control2.imag])
+        self.control1 = cas.DM([base.control1.real, base.control1.imag])
+        self.control2 = cas.DM([base.control2.real, base.control2.imag])
         SymbolicElement.__init__(self, base, expr_from=CubicBezier.point)
 
     def point(self, s):
@@ -71,23 +89,66 @@ class SymbolicCubicBezier(SymbolicElement, CubicBezier):
         else:
             return CubicBezier.point(self, s)
 
-    def length(self, **kwargs):
-        return float(self.arclength(1.0))
 
-# class SymbolicQuadraticBezier(SymbolicElement, QuadraticBezier):
-#     def __init__(self, base):
-#         SymbolicElement.__init__(self, base)
-#
-#         self.control = cas.DM([base.control.real, -base.control.imag])
-#         self._expr = self.point(self._s)
+class SymbolicQuadraticBezier(SymbolicElement, QuadraticBezier):
+    def __init__(self, base):
+        self.control = cas.DM([base.control.real, base.control.imag])
+        SymbolicElement.__init__(self, base, expr_from=QuadraticBezier.point)
+
+    def point(self, s):
+        if self._natural_parametrization:
+            return QuadraticBezier.point(self, self._rescaler(s, s))
+        else:
+            return QuadraticBezier.point(self, s)
 
 
-# class SymbolicArc(SymbolicElement, Arc):
-#     def __init__(self, base):
-#         SymbolicElement.__init__(self, base)
-#
-#     def length(self, **kwargs):
-#         return float(self.arclength(1.0))
+class SymbolicArc(SymbolicElement, Arc):
+    def __init__(self, base):
+        self.start = cas.DM([base.start.real, base.start.imag])
+        self.radius = cas.DM([base.radius.real, base.radius.imag])
+        self.center = cas.DM([base.center.real, base.center.imag])
+        self.end = cas.DM([base.end.real, base.end.imag])
+        self.theta = base.theta
+        self.delta = base.delta
+        self.rotation = base.rotation
+        self.radius_scale = base.radius_scale
+        SymbolicElement.__init__(self, base)
+
+    def point(self, s):
+        if cas.norm_2(self.start-self.end) < 1e-16:
+            return self.start
+
+        if self.radius[0] == 0 or self.radius[1] == 0:
+            return self.start + (self.end - self.start) * s
+
+        angle = (self.theta + (self.delta * s)) * cas.pi / 180
+        cosr = cas.cos(self.rotation * cas.pi / 180)
+        sinr = cas.sin(self.rotation * cas.pi / 180)
+        radius = self.radius * self.radius_scale
+
+        p = cas.MX.nan(2, 1)
+        p[0] = cosr * cas.cos(angle) * radius[0] - sinr * cas.sin(angle) * radius[1] + self.center[0]
+        p[1] = sinr * cas.cos(angle) * radius[0] + cosr * cas.sin(angle) * radius[1] + self.center[1]
+        return p
+
+    def translate(self, dx, dy=0):
+        if dx != 0 or dy != 0:
+            delta = cas.DM([dx, dy])
+            self.start += delta
+            self.center += delta
+            self.end += delta
+
+    def rotate(self, theta, x=0, y=0):
+        rot = cas.DM(2, 2)
+        rot[0, :] = [+cas.cos(theta * cas.pi / 180), -cas.sin(theta * cas.pi / 180)]
+        rot[1, :] = [+cas.sin(theta * cas.pi / 180), +cas.cos(theta * cas.pi / 180)]
+
+        self.translate(dx=-x, dy=-y)
+        self.start = rot@self.start
+        self.center = rot@self.center
+        self.rotation = theta
+        self.end = rot@self.end
+        self.translate(dx=+x, dy=+y)
 
 
 class SymbolicMove(SymbolicElement, Move):
@@ -103,4 +164,4 @@ class SymbolicClose(SymbolicElement, Close):
         SymbolicElement.__init__(self, base)
 
     def length(self, **kwargs):
-        return 0.0
+        return float(cas.norm_2(self.end-self.start))

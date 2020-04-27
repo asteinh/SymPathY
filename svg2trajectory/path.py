@@ -1,6 +1,8 @@
 from svg.path import Path
 from svg2trajectory.elements import SymbolicMixin
-from svg2trajectory.elements import SymbolicMove, SymbolicLine, SymbolicCubicBezier, SymbolicClose
+import svg2trajectory.elements as elements
+# , SymbolicMove, SymbolicLine, SymbolicCubicBezier  # noqa: F401
+# from svg2trajectory.elements import SymbolicQuadraticBezier, SymbolicArc, SymbolicClose  # noqa: F401
 import casadi as cas
 import numpy as np
 
@@ -13,7 +15,7 @@ class SymbolicPath(SymbolicMixin, Path):
         # build path from segments
         for seg in path._segments:
             clss = 'Symbolic' + seg.__class__.__name__
-            self._segments.append(globals()[clss](seg))
+            self._segments.append(getattr(elements, clss)(seg))
 
         self.__symbolic_setup()
 
@@ -90,6 +92,17 @@ class SymbolicPath(SymbolicMixin, Path):
         else:
             c = self.__maybe_map_function(self._curvature, s)
             return np.array(c)
+
+    # transforms
+    def translate(self, dx, dy=0):
+        for seg in self._segments:
+            seg.translate(dx=dx, dy=dy)
+        self.__symbolic_setup()
+
+    def rotate(self, theta, x=0, y=0):
+        for seg in self._segments:
+            seg.rotate(theta=theta, x=x, y=y)
+        self.__symbolic_setup()
 
     # def resize(self, start=[0, 0], end=[1, None]):
     #     pass

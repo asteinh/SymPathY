@@ -34,6 +34,7 @@ for i in range(N):
     plt.arrow(p[0, i], p[1, i], t[0, i], t[1, i], color='black', zorder=1)
     plt.arrow(p[0, i], p[1, i], n[0, i], n[1, i], color='gray', zorder=1)
 
+plt.gca().invert_yaxis()
 plt.axis('equal')
 # plt.grid()
 plt.show()
