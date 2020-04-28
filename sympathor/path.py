@@ -1,4 +1,4 @@
-import sympathy.elements as elements
+import sympathor.elements as elements
 from svg.path import Path
 import casadi as cas
 import numpy as np

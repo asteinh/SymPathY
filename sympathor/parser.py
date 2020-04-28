@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as et
 from svg.path import parse_path
-from sympathy.path import SymbolicPath
+from sympathor.path import SymbolicPath
 import os.path
 import re
 

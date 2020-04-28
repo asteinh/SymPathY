@@ -1,4 +1,4 @@
-from sympathy import ParsePaths
+from sympathor import ParsePaths
 import matplotlib.pyplot as plt
 import numpy as np
 

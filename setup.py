@@ -1,15 +1,15 @@
 import setuptools
 
 setuptools.setup(
-    name="SymPathY",
+    name="sympathor",
     version="0.0.1",
-    description="SymPathY - A Python package to yield symbolic path descriptions from SVGs.",
+    description="sympathor - A Python package to yield symbolic path descriptions from SVGs.",
     license="MIT",
     author="Armin Steinhauser",
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
     keywords="svg symbolic path arc parametrization frenet automatic differentiation",
-    url="https://github.com/asteinh/SymPathY",
+    url="https://github.com/asteinh/sympathor",
     packages=setuptools.find_packages(),
     install_requires=open('requirements.txt').read().splitlines(),
     classifiers=[
