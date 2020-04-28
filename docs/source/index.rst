@@ -15,10 +15,10 @@
 
     api/index
 
-Welcome to svg2trajectory's documentation!
+Welcome to sympathor's documentation!
 ==========================================
 
-svg2trajectory is a free and open-source Python package.
+sympathor is a free and open-source Python package.
 
 Looking for an easy way to get started? Check out the `quick start guide <quick-start.html>`_.
 
@@ -32,4 +32,4 @@ Python 3
 
 License
 -------
-svg2trajectory is licensed under the `MIT license <https://en.wikipedia.org/wiki/MIT_License>`_.
+sympathor is licensed under the `MIT license <https://en.wikipedia.org/wiki/MIT_License>`_.

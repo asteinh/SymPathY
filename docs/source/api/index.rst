@@ -1,7 +1,7 @@
-svg2trajectory
+sympathor
 ==============
 
-.. automodule:: svg2trajectory
+.. automodule:: sympathor
     :members:
     :undoc-members:
     :show-inheritance:

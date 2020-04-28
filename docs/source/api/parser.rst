@@ -1,7 +1,7 @@
-svg2trajectory.parser
+sympathor.parser
 =====================
 
-.. automodule:: svg2trajectory.parser
+.. automodule:: sympathor.parser
     :members:
     :undoc-members:
     :show-inheritance:

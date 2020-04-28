@@ -6,7 +6,7 @@ from recommonmark.parser import CommonMarkParser
 
 sys.path.insert(0, os.path.abspath('../../'))  # for autodoc
 
-project = 'svg2trajectory'
+project = 'sympathor'
 copyright = '2020'
 author = 'Armin Steinhauser'
 release = 'v0.0.1'
@@ -17,10 +17,11 @@ extensions = [
     'sphinx.ext.autosummary',
     'sphinx.ext.napoleon',
     'sphinx.ext.githubpages',
-    'sphinx.ext.mathjax'
+    'sphinx.ext.mathjax',
+    'sphinx.ext.viewcode',
 ]
-
-autosummary_generate = True
+# napoleon_google_docstring = True
+# autosummary_generate = True
 
 templates_path = ['_templates']
 exclude_patterns = []
@@ -31,10 +32,10 @@ source_parsers = {'.md': CommonMarkParser}
 html_theme = 'sphinx_rtd_theme'
 # html_static_path = ['_static']
 html_context = {
-    'source_url_prefix': "https://github.com/asteinh/svg2trajectory/blob/master/docs/source/",
+    'source_url_prefix': "https://github.com/asteinh/sympathor/blob/master/docs/source/",
     "display_github": True,  # Integrate GitHub
     "github_user": "asteinh",  # Username
-    "github_repo": "svg2trajectory",  # Repo name
+    "github_repo": "sympathor",  # Repo name
     "github_version": "master",  # Version
     "conf_py_path": "/docs/source/",
 }
