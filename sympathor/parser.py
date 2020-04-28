@@ -121,3 +121,6 @@ class ParsePaths():
 
     def __getitem__(self, index):
         return self.paths[index]
+
+    def __len__(self):
+        return len(self.paths)

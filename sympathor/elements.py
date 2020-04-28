@@ -54,9 +54,10 @@ class SymbolicElement(SymbolicMixin):
         return float(self.arclength(1.0))
 
     def matrix(self, a, b, c, d, e, f):
-        rot = cas.DM([[a, c, e], [b, d, f]])
-        self.start = rot@self.start
-        self.end = rot@self.end
+        rot = cas.DM([[a, c], [b, d]])
+        delta = cas.DM([e, f])
+        self.start = rot@self.start + delta
+        self.end = rot@self.end + delta
 
     def translate(self, dx, dy=0):
         delta = cas.DM([dx, dy])
