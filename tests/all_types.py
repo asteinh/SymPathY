@@ -1,8 +1,8 @@
-from sympathy import Parser
+from sympathy import ParsePaths
 import matplotlib.pyplot as plt
 import numpy as np
 
-paths = Parser('tests/svg/all_types.svg')
+paths = ParsePaths('tests/files/all_types.svg')
 for i, path in enumerate(paths):
     # if i == 1:
     #     path.natural_parametrization()

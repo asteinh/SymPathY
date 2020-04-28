@@ -63,14 +63,19 @@ class SymbolicElement(SymbolicMixin):
         self.start += delta
         self.end += delta
 
-    def rotate(self, theta, x=0, y=0):
-        rot = cas.DM([[+cas.cos(theta / 180 * cas.pi), -cas.sin(theta / 180 * cas.pi)],
-                      [+cas.sin(theta / 180 * cas.pi), +cas.cos(theta / 180 * cas.pi)]])
-
+    def _pre_rotate(self, theta, x, y):
         self.translate(dx=-x, dy=-y)
+        return cas.DM([[+cas.cos(theta / 180 * cas.pi), -cas.sin(theta / 180 * cas.pi)],
+                       [+cas.sin(theta / 180 * cas.pi), +cas.cos(theta / 180 * cas.pi)]])
+
+    def _post_rotate(self, x, y):
+        self.translate(dx=x, dy=y)
+
+    def rotate(self, theta, x=0, y=0):
+        rot = self._pre_rotate(theta, x, y)
         self.start = rot@self.start
         self.end = rot@self.end
-        self.translate(dx=+x, dy=+y)
+        self._post_rotate(x, y)
 
     def scale(self, x, y=None):
         if y is None:
@@ -104,6 +109,21 @@ class SymbolicCubicBezier(SymbolicElement, CubicBezier):
         else:
             return CubicBezier.point(self, s)
 
+    def translate(self, dx, dy=0):
+        delta = cas.DM([dx, dy])
+        self.start += delta
+        self.control1 += delta
+        self.control2 += delta
+        self.end += delta
+
+    def rotate(self, theta, x=0, y=0):
+        rot = self._pre_rotate(theta, x, y)
+        self.start = rot@self.start
+        self.control1 = rot@self.control1
+        self.control2 = rot@self.control2
+        self.end = rot@self.end
+        self._post_rotate(x, y)
+
 
 class SymbolicQuadraticBezier(SymbolicElement, QuadraticBezier):
     def __init__(self, base):
@@ -115,6 +135,19 @@ class SymbolicQuadraticBezier(SymbolicElement, QuadraticBezier):
             return QuadraticBezier.point(self, self._rescaler(s, s))
         else:
             return QuadraticBezier.point(self, s)
+
+    def translate(self, dx, dy=0):
+        delta = cas.DM([dx, dy])
+        self.start += delta
+        self.control += delta
+        self.end += delta
+
+    def rotate(self, theta, x=0, y=0):
+        rot = self._pre_rotate(theta, x, y)
+        self.start = rot@self.start
+        self.control = rot@self.control
+        self.end = rot@self.end
+        self._post_rotate(x, y)
 
 
 class SymbolicArc(SymbolicElement, Arc):
@@ -141,8 +174,9 @@ class SymbolicArc(SymbolicElement, Arc):
         sinr = cas.sin(self.rotation * cas.pi / 180)
         radius = self.radius * self.radius_scale
 
-        p = cas.MX([[cosr * cas.cos(angle) * radius[0] - sinr * cas.sin(angle) * radius[1] + self.center[0]],
-                    [sinr * cas.cos(angle) * radius[0] + cosr * cas.sin(angle) * radius[1] + self.center[1]]])
+        p = cas.MX(2, 1)
+        p[0] = cosr * cas.cos(angle) * radius[0] - sinr * cas.sin(angle) * radius[1] + self.center[0]
+        p[1] = sinr * cas.cos(angle) * radius[0] + cosr * cas.sin(angle) * radius[1] + self.center[1]
         return p
 
     def translate(self, dx, dy=0):
@@ -152,15 +186,12 @@ class SymbolicArc(SymbolicElement, Arc):
         self.end += delta
 
     def rotate(self, theta, x=0, y=0):
-        rot = cas.DM([[+cas.cos(theta / 180 * cas.pi), -cas.sin(theta / 180 * cas.pi)],
-                      [+cas.sin(theta / 180 * cas.pi), +cas.cos(theta / 180 * cas.pi)]])
-
-        self.translate(dx=-x, dy=-y)
+        rot = self._pre_rotate(theta, x, y)
         self.start = rot@self.start
         self.center = rot@self.center
         self.rotation = theta
         self.end = rot@self.end
-        self.translate(dx=+x, dy=+y)
+        self._post_rotate(x, y)
 
 
 class SymbolicMove(SymbolicElement, Move):

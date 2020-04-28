@@ -1,8 +1,8 @@
-from sympathy import Parser
+from sympathy import ParsePaths
 import matplotlib.pyplot as plt
 import numpy as np
 
-paths = Parser('examples/svg/two_cubic_beziers.svg')
+paths = ParsePaths('examples/files/two_cubic_beziers.svg')
 for i, path in enumerate(paths):
     if i == 1:
         path.natural_parametrization()

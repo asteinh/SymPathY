@@ -1,11 +1,14 @@
-from sympathy import Parser
+from sympathy import ParsePaths
 import matplotlib
 import matplotlib.pyplot as plt
 
 import numpy as np
 
 # get all paths in SVG as a list
-paths = Parser('examples/svg/racetrack.svg')
+paths = ParsePaths('examples/files/racetrack.svg')
+# or, get paths in text file as a list
+# paths = ParsePaths('examples/files/racetrack.txt')
+
 path = paths[0]
 
 print("Total path length: {}".format(path.length()))

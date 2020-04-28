@@ -1,1 +1,1 @@
-from sympathy.parser import Parser
+from sympathy.parser import ParsePaths
