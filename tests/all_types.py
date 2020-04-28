@@ -1,4 +1,4 @@
-from svg2trajectory import Parser
+from sympathy import Parser
 import matplotlib.pyplot as plt
 import numpy as np
 

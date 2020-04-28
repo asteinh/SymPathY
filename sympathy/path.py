@@ -1,4 +1,4 @@
-import svg2trajectory.elements as elements
+import sympathy.elements as elements
 from svg.path import Path
 import casadi as cas
 import numpy as np

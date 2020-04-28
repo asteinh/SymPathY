@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as et
 from svg.path import parse_path
-from svg2trajectory.path import SymbolicPath
+from sympathy.path import SymbolicPath
 import re
 
 

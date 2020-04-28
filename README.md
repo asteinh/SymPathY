@@ -1,9 +1,15 @@
-# svg2trajectory
-Parses paths of an SVG to (symbolic) trajectories. Easily (re-)sample the trajectory and obtain various other characteristics, like a Frenet–Serret frame or the path's curvature:
+# SymPathY - Symbolic Path Yielder
 
-![](docs/img/racetrack.png)
+SymPathY has compassion with those people trying to obtain a symbolic description of paths described by the [SVG 2 specification](https://www.w3.org/TR/SVG/paths.html).
+
+At reasonable size, SymPathY enables you to extract a fully symbolic description of paths from MIME types `text/plain` or `image/svg+xml`. Based on this symbolic description, you can obtain a sampled path for further numerical processing, the path's natural parametrization, its Frenet frame, etc.
+
+In short, SymPathY seeks to single-handedly provide properties and quantities of differential geometry at high precision.
 
 ## Get started
-This little tool is written for Python 3. Make sure to fetch all dependencies: `pip install -r requirements.txt`
+This little tool is written for Python 3. You can find all dependencies in `requirements.txt` and easily install the package by running `python setup.py install`.
 
-To get started, check out the examples!
+The easiest way to get started with SymPathY is by having a look at the examples.
+As a motivation, look at the imaginary race track below with its Frenet frame and curvature visualized:
+
+![](docs/img/racetrack.png)
