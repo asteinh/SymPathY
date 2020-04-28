@@ -5,6 +5,23 @@ import numpy as np
 
 
 class SymbolicPath(elements.SymbolicMixin, Path):
+    """
+    A symbolic path description extending `svg.path.Path`.
+
+    This class mates various symbolic elements by building a composite path \
+    description. Based on this composite path, properties and quantities of \
+    differential geometry can be derived, e.g. tangent and normal vectors, or \
+    the curvature.
+    This class also implements a convenient path-level access to SVG \
+    transforms, which are simply delegated to each element.
+
+    Parameters
+    ----------
+    path : svg.path.Path
+        An `svg.path.Path` object, e.g. parsed using `svg.path.parse_path()`, \
+        as done in `sympathor.ParsePaths()`.
+
+    """
     def __init__(self, path):
         Path.__init__(self)
         elements.SymbolicMixin.__init__(self)
@@ -51,6 +68,14 @@ class SymbolicPath(elements.SymbolicMixin, Path):
         return fcn_(s_)
 
     def natural_parametrization(self, on=True):
+        """
+        Toggle natural parametrization of path.
+
+        Parameters
+        ----------
+        on : bool
+            Activate natural parametrization
+        """
         if on:
             for seg in self._segments:
                 seg._natural_parametrization = True
@@ -60,9 +85,34 @@ class SymbolicPath(elements.SymbolicMixin, Path):
         self.__symbolic_setup()
 
     def length(self):
+        """
+        Compute overall length of path.
+
+        Returns
+        -------
+        length : numpy.float
+            Length of path
+
+        """
         return np.float(Path.length(self))
 
     def point(self, s=None):
+        """
+        Obtain point along the path.
+
+        Parameters
+        ----------
+        s : float or list of float, optional
+            The parameter value(s) at which the path should be sampled.
+
+        Returns
+        -------
+        point : casadi.Function or numpy.ndarray
+            Function of symbolic description of point if no parameter value \
+            was provided; otherwise an array of point coordinates \
+            corresponding to the given parameter values.
+
+        """
         if s is None:
             return self._point_expr
         else:
@@ -70,22 +120,72 @@ class SymbolicPath(elements.SymbolicMixin, Path):
             return np.array(p)
 
     def tangent(self, s=None):
+        """
+        Obtain tangent vector along the path.
+
+        Parameters
+        ----------
+        s : float or list of float, optional
+            The parameter value(s) at which the tangent vector should be \
+            evaluated.
+
+        Returns
+        -------
+        point : casadi.Function or numpy.ndarray
+            Function of symbolic description of tangent vector if no parameter \
+            value was provided; otherwise an array of components of the \
+            tangent vector corresponding to the given parameter values.
+
+        """
         if s is None:
-            return self._tangent_expr
+            return self._tangent
         else:
             t = self.__maybe_map_function(self._tangent, s)
             return np.array(t)
 
     def normal(self, s=None):
+        """
+        Obtain normal vector along the path.
+
+        Parameters
+        ----------
+        s : float or list of float, optional
+            The parameter value(s) at which the normal vector should be \
+            evaluated.
+
+        Returns
+        -------
+        point : casadi.Function or numpy.ndarray
+            Function of symbolic description of normal vector if no parameter \
+            value was provided; otherwise an array of components of the normal \
+            vector corresponding to the given parameter values.
+
+        """
         if s is None:
-            return self._normal_expr
+            return self._normal
         else:
             n = self.__maybe_map_function(self._normal, s)
             return np.array(n)
 
     def curvature(self, s=None):
+        """
+        Obtain curvature along the path.
+
+        Parameters
+        ----------
+        s : float or list of float, optional
+            The parameter value(s) at which the curvature should be evaluated.
+
+        Returns
+        -------
+        point : casadi.Function or numpy.ndarray
+            Function of symbolic description of curvature if no parameter \
+            value was provided; otherwise an array of curvature values \
+            corresponding to the given parameter values.
+
+        """
         if s is None:
-            return self._curvature_expr
+            return self._curvature
         else:
             c = self.__maybe_map_function(self._curvature, s)
             return np.array(c)
