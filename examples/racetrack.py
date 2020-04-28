@@ -1,11 +1,14 @@
-from svg2trajectory import Parser
+from sympathor import ParsePaths
 import matplotlib
 import matplotlib.pyplot as plt
 
 import numpy as np
 
 # get all paths in SVG as a list
-paths = Parser('examples/svg/racetrack.svg')
+paths = ParsePaths('examples/files/racetrack.svg')
+# or, get paths in text file as a list
+# paths = ParsePaths('examples/files/racetrack.txt')
+
 path = paths[0]
 
 print("Total path length: {}".format(path.length()))
@@ -34,6 +37,7 @@ for i in range(N):
     plt.arrow(p[0, i], p[1, i], t[0, i], t[1, i], color='black', zorder=1)
     plt.arrow(p[0, i], p[1, i], n[0, i], n[1, i], color='gray', zorder=1)
 
+plt.gca().invert_yaxis()
 plt.axis('equal')
 # plt.grid()
 plt.show()

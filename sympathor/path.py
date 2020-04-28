@@ -1,19 +1,18 @@
+import sympathor.elements as elements
 from svg.path import Path
-from svg2trajectory.elements import SymbolicMixin
-from svg2trajectory.elements import SymbolicMove, SymbolicLine, SymbolicCubicBezier, SymbolicClose
 import casadi as cas
 import numpy as np
 
 
-class SymbolicPath(SymbolicMixin, Path):
+class SymbolicPath(elements.SymbolicMixin, Path):
     def __init__(self, path):
         Path.__init__(self)
-        SymbolicMixin.__init__(self)
+        elements.SymbolicMixin.__init__(self)
 
         # build path from segments
         for seg in path._segments:
             clss = 'Symbolic' + seg.__class__.__name__
-            self._segments.append(globals()[clss](seg))
+            self._segments.append(getattr(elements, clss)(seg))
 
         self.__symbolic_setup()
 
@@ -91,8 +90,35 @@ class SymbolicPath(SymbolicMixin, Path):
             c = self.__maybe_map_function(self._curvature, s)
             return np.array(c)
 
-    # def resize(self, start=[0, 0], end=[1, None]):
-    #     pass
-    #
-    # def rotate(self, angle):
-    #     pass
+    # transforms
+    def matrix(self, a, b, c, d, e, f):
+        for seg in self._segments:
+            seg.matrix(a=a, b=b, c=c, d=d, e=e, f=f)
+        self.__symbolic_setup()
+
+    def translate(self, dx, dy=0):
+        for seg in self._segments:
+            seg.translate(dx=dx, dy=dy)
+        self.__symbolic_setup()
+
+    def rotate(self, theta, x=0, y=0):
+        for seg in self._segments:
+            seg.rotate(theta=theta, x=x, y=y)
+        self.__symbolic_setup()
+
+    def scale(self, x, y=None):
+        if y is None:
+            y = x
+        for seg in self._segments:
+            seg.scale(x=x, y=y)
+        self.__symbolic_setup()
+
+    def skewX(self, theta):
+        for seg in self._segments:
+            seg.skewX(theta=theta)
+        self.__symbolic_setup()
+
+    def skewY(self, theta):
+        for seg in self._segments:
+            seg.skewY(theta=theta)
+        self.__symbolic_setup()
