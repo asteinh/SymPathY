@@ -49,7 +49,7 @@ jobs:
           at: ~/project/
       - gh-pages/deploy:
           build-dir: docs/build/html
-          ssh-fingerprints: 90:82:6a:ce:4b:38:68:9c:76:87:6a:e2:1e:fd:7f:b3
+          ssh-fingerprints: 11:75:2a:09:0c:45:4a:e9:79:91:ef:ed:a1:52:cd:eb
 
 ################################################################################
 # WORKFLOWS
