@@ -8,7 +8,7 @@ executors:
       - image: asteinh/docker:sympathor
 
 orbs:
-  gh-pages: sugarshin/gh-pages@x.y.z
+  gh-pages: sugarshin/gh-pages@0.0.6
 
 ################################################################################
 # JOBS
