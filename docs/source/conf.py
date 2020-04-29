@@ -30,7 +30,7 @@ source_parsers = {'.md': CommonMarkParser}
 
 # HTML
 html_theme = 'sphinx_rtd_theme'
-# html_static_path = ['_static']
+html_static_path = ['_static']
 html_context = {
     'source_url_prefix': "https://github.com/asteinh/sympathor/blob/master/docs/source/",
     "display_github": True,  # Integrate GitHub

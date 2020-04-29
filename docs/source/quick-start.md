@@ -13,7 +13,7 @@ We will show some features of sympathor by assuming the following use case: We h
 Lucky us, we easily find a nice drawing of the circuit of Spa-Francorchamps on the internet:
 
 <div style="width: 60%; font-size: 75%; text-align: right; margin: 10px 20%;">
-  <img src="../../../examples/racetrack/Spa-Francorchamps.svg" style="padding-bottom:0.5em;" />
+  <img src="_static/img/Spa-Francorchamps.svg" style="padding-bottom:0.5em;" />
   By Will Pittenger - Own work, CC BY-SA 3.0, <a href="https://commons.wikimedia.org/w/index.php?curid=7699160">link</a>
 </div>
 
@@ -66,7 +66,7 @@ For our subsequent control task, we are asked to provide the Frenet frame at a c
 We'll skip the code of plotting them since it's a bit lengthy, but have a look at the example in `examples/racetrack` for details. The result looks like this:
 
 <div style="width: 80%; font-size: 75%; text-align: right; margin: 10px 10%;">
-  <img src="../../../examples/racetrack/curvature.png" style="padding-bottom:0.5em;" />
+  <img src="_static/img/curvature.png" style="padding-bottom:0.5em;" />
 </div>
 
 And that's all for now. We suggest you head over to the examples to get more insight - if you've got questions or issues, feel free to reach out in one way or another.
