@@ -1,0 +1,404 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>sympathor.elements &mdash; sympathor v0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> sympathor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Docs</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quick-start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../input-formats.html">Input formats</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">sympathor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">sympathor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>sympathor.elements</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for sympathor.elements</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">svg.path</span> <span class="kn">import</span> <span class="n">Line</span><span class="p">,</span> <span class="n">CubicBezier</span><span class="p">,</span> <span class="n">QuadraticBezier</span><span class="p">,</span> <span class="n">Arc</span><span class="p">,</span> <span class="n">Move</span><span class="p">,</span> <span class="n">Close</span>
+<span class="kn">import</span> <span class="nn">casadi</span> <span class="k">as</span> <span class="nn">cas</span>
+
+
+<div class="viewcode-block" id="quadrature"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.quadrature">[docs]</a><span class="k">def</span> <span class="nf">quadrature</span><span class="p">(</span><span class="n">fcn</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="c1"># Simpson&#39;s rule</span>
+    <span class="n">N</span> <span class="o">+=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">N</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">fcnmap</span> <span class="o">=</span> <span class="n">fcn</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">xvals</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">fvals</span> <span class="o">=</span> <span class="n">fcnmap</span><span class="p">(</span><span class="n">xvals</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">/</span><span class="n">N</span><span class="o">/</span><span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="n">fvals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">4</span><span class="o">*</span><span class="n">cas</span><span class="o">.</span><span class="n">sum2</span><span class="p">(</span><span class="n">fvals</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">cas</span><span class="o">.</span><span class="n">sum2</span><span class="p">(</span><span class="n">fvals</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="n">fvals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="SymbolicMixin"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicMixin">[docs]</a><span class="k">class</span> <span class="nc">SymbolicMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_s</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">MX</span><span class="o">.</span><span class="n">sym</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_expr</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">MX</span><span class="o">.</span><span class="n">nan</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SymbolicMixin.arclength"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicMixin.arclength">[docs]</a>    <span class="k">def</span> <span class="nf">arclength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">integrator</span><span class="p">(</span>
+            <span class="s1">&#39;integrator&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;rk&#39;</span><span class="p">,</span>
+            <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">cas</span><span class="o">.</span><span class="n">MX</span><span class="o">.</span><span class="n">sym</span><span class="p">(</span><span class="s1">&#39;null&#39;</span><span class="p">),</span> <span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="p">,</span> <span class="s1">&#39;ode&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;quad&#39;</span><span class="p">:</span> <span class="n">cas</span><span class="o">.</span><span class="n">norm_2</span><span class="p">(</span><span class="n">cas</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_expr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="p">))},</span>
+            <span class="p">{</span><span class="s1">&#39;t0&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;tf&#39;</span><span class="p">:</span> <span class="n">s</span><span class="p">}</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">call</span><span class="p">({})[</span><span class="s1">&#39;qf&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">length</span></div></div>
+
+
+<div class="viewcode-block" id="SymbolicElement"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicElement">[docs]</a><span class="k">class</span> <span class="nc">SymbolicElement</span><span class="p">(</span><span class="n">SymbolicMixin</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">expr_from</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">SymbolicMixin</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">DM</span><span class="p">([</span><span class="n">base</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">imag</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">DM</span><span class="p">([</span><span class="n">base</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">imag</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">expr_from</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_expr</span> <span class="o">=</span> <span class="n">expr_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_expr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_natural_parametrization</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rescaler</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_setup_rescaler</span><span class="p">()</span>
+
+<div class="viewcode-block" id="SymbolicElement.arclength"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicElement.arclength">[docs]</a>    <span class="k">def</span> <span class="nf">arclength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="c1"># approximation of arc length for elements</span>
+        <span class="n">fcn</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="s1">&#39;fcn&#39;</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="p">],</span> <span class="p">[</span><span class="n">cas</span><span class="o">.</span><span class="n">norm_2</span><span class="p">(</span><span class="n">cas</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_expr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="p">))])</span>
+        <span class="k">return</span> <span class="n">quadrature</span><span class="p">(</span><span class="n">fcn</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_setup_rescaler</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># find a point where arc length == s * length</span>
+        <span class="n">s_noli</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">MX</span><span class="o">.</span><span class="n">sym</span><span class="p">(</span><span class="s1">&#39;s_noli&#39;</span><span class="p">)</span>
+        <span class="n">fcn</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="s1">&#39;fcn&#39;</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="p">,</span> <span class="n">s_noli</span><span class="p">],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">arclength</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="p">)</span> <span class="o">-</span> <span class="n">s_noli</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">()])</span>
+        <span class="k">return</span> <span class="n">cas</span><span class="o">.</span><span class="n">rootfinder</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;newton&#39;</span><span class="p">,</span> <span class="n">fcn</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SymbolicElement.length"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicElement.length">[docs]</a>    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arclength</span><span class="p">(</span><span class="mf">1.0</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="SymbolicElement.matrix"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicElement.matrix">[docs]</a>    <span class="k">def</span> <span class="nf">matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="n">rot</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">DM</span><span class="p">([[</span><span class="n">a</span><span class="p">,</span> <span class="n">c</span><span class="p">],</span> <span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">]])</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">DM</span><span class="p">([</span><span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">rot</span><span class="nd">@self</span><span class="o">.</span><span class="n">start</span> <span class="o">+</span> <span class="n">delta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">rot</span><span class="nd">@self</span><span class="o">.</span><span class="n">end</span> <span class="o">+</span> <span class="n">delta</span></div>
+
+<div class="viewcode-block" id="SymbolicElement.translate"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicElement.translate">[docs]</a>    <span class="k">def</span> <span class="nf">translate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">DM</span><span class="p">([</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">+=</span> <span class="n">delta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">+=</span> <span class="n">delta</span></div>
+
+    <span class="k">def</span> <span class="nf">_pre_rotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">dx</span><span class="o">=-</span><span class="n">x</span><span class="p">,</span> <span class="n">dy</span><span class="o">=-</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cas</span><span class="o">.</span><span class="n">DM</span><span class="p">([[</span><span class="o">+</span><span class="n">cas</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">/</span> <span class="mi">180</span> <span class="o">*</span> <span class="n">cas</span><span class="o">.</span><span class="n">pi</span><span class="p">),</span> <span class="o">-</span><span class="n">cas</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span> <span class="o">/</span> <span class="mi">180</span> <span class="o">*</span> <span class="n">cas</span><span class="o">.</span><span class="n">pi</span><span class="p">)],</span>
+                       <span class="p">[</span><span class="o">+</span><span class="n">cas</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span> <span class="o">/</span> <span class="mi">180</span> <span class="o">*</span> <span class="n">cas</span><span class="o">.</span><span class="n">pi</span><span class="p">),</span> <span class="o">+</span><span class="n">cas</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">/</span> <span class="mi">180</span> <span class="o">*</span> <span class="n">cas</span><span class="o">.</span><span class="n">pi</span><span class="p">)]])</span>
+
+    <span class="k">def</span> <span class="nf">_post_rotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">dx</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SymbolicElement.rotate"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicElement.rotate">[docs]</a>    <span class="k">def</span> <span class="nf">rotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">rot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pre_rotate</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">rot</span><span class="nd">@self</span><span class="o">.</span><span class="n">start</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">rot</span><span class="nd">@self</span><span class="o">.</span><span class="n">end</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_post_rotate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SymbolicElement.scale"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicElement.scale">[docs]</a>    <span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>  <span class="c1"># TODO</span></div>
+
+<div class="viewcode-block" id="SymbolicElement.skewX"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicElement.skewX">[docs]</a>    <span class="k">def</span> <span class="nf">skewX</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>  <span class="c1"># TODO</span></div>
+
+<div class="viewcode-block" id="SymbolicElement.skewY"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicElement.skewY">[docs]</a>    <span class="k">def</span> <span class="nf">skewY</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>  <span class="c1"># TODO</span></div></div>
+
+
+<div class="viewcode-block" id="SymbolicLine"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicLine">[docs]</a><span class="k">class</span> <span class="nc">SymbolicLine</span><span class="p">(</span><span class="n">SymbolicElement</span><span class="p">,</span> <span class="n">Line</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">):</span>
+        <span class="n">SymbolicElement</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SymbolicLine.length"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicLine.length">[docs]</a>    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">cas</span><span class="o">.</span><span class="n">norm_2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="SymbolicCubicBezier"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicCubicBezier">[docs]</a><span class="k">class</span> <span class="nc">SymbolicCubicBezier</span><span class="p">(</span><span class="n">SymbolicElement</span><span class="p">,</span> <span class="n">CubicBezier</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">control1</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">DM</span><span class="p">([</span><span class="n">base</span><span class="o">.</span><span class="n">control1</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">control1</span><span class="o">.</span><span class="n">imag</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">control2</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">DM</span><span class="p">([</span><span class="n">base</span><span class="o">.</span><span class="n">control2</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">control2</span><span class="o">.</span><span class="n">imag</span><span class="p">])</span>
+        <span class="n">SymbolicElement</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">expr_from</span><span class="o">=</span><span class="n">CubicBezier</span><span class="o">.</span><span class="n">point</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SymbolicCubicBezier.point"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicCubicBezier.point">[docs]</a>    <span class="k">def</span> <span class="nf">point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_natural_parametrization</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">CubicBezier</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rescaler</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">CubicBezier</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SymbolicCubicBezier.translate"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicCubicBezier.translate">[docs]</a>    <span class="k">def</span> <span class="nf">translate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">DM</span><span class="p">([</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">+=</span> <span class="n">delta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">control1</span> <span class="o">+=</span> <span class="n">delta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">control2</span> <span class="o">+=</span> <span class="n">delta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">+=</span> <span class="n">delta</span></div>
+
+<div class="viewcode-block" id="SymbolicCubicBezier.rotate"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicCubicBezier.rotate">[docs]</a>    <span class="k">def</span> <span class="nf">rotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">rot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pre_rotate</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">rot</span><span class="nd">@self</span><span class="o">.</span><span class="n">start</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">control1</span> <span class="o">=</span> <span class="n">rot</span><span class="nd">@self</span><span class="o">.</span><span class="n">control1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">control2</span> <span class="o">=</span> <span class="n">rot</span><span class="nd">@self</span><span class="o">.</span><span class="n">control2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">rot</span><span class="nd">@self</span><span class="o">.</span><span class="n">end</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_post_rotate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="SymbolicQuadraticBezier"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicQuadraticBezier">[docs]</a><span class="k">class</span> <span class="nc">SymbolicQuadraticBezier</span><span class="p">(</span><span class="n">SymbolicElement</span><span class="p">,</span> <span class="n">QuadraticBezier</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">control</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">DM</span><span class="p">([</span><span class="n">base</span><span class="o">.</span><span class="n">control</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">control</span><span class="o">.</span><span class="n">imag</span><span class="p">])</span>
+        <span class="n">SymbolicElement</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">expr_from</span><span class="o">=</span><span class="n">QuadraticBezier</span><span class="o">.</span><span class="n">point</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SymbolicQuadraticBezier.point"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicQuadraticBezier.point">[docs]</a>    <span class="k">def</span> <span class="nf">point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_natural_parametrization</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">QuadraticBezier</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rescaler</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">QuadraticBezier</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SymbolicQuadraticBezier.translate"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicQuadraticBezier.translate">[docs]</a>    <span class="k">def</span> <span class="nf">translate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">DM</span><span class="p">([</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">+=</span> <span class="n">delta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">control</span> <span class="o">+=</span> <span class="n">delta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">+=</span> <span class="n">delta</span></div>
+
+<div class="viewcode-block" id="SymbolicQuadraticBezier.rotate"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicQuadraticBezier.rotate">[docs]</a>    <span class="k">def</span> <span class="nf">rotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">rot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pre_rotate</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">rot</span><span class="nd">@self</span><span class="o">.</span><span class="n">start</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">control</span> <span class="o">=</span> <span class="n">rot</span><span class="nd">@self</span><span class="o">.</span><span class="n">control</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">rot</span><span class="nd">@self</span><span class="o">.</span><span class="n">end</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_post_rotate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="SymbolicArc"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicArc">[docs]</a><span class="k">class</span> <span class="nc">SymbolicArc</span><span class="p">(</span><span class="n">SymbolicElement</span><span class="p">,</span> <span class="n">Arc</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">DM</span><span class="p">([</span><span class="n">base</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">imag</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">DM</span><span class="p">([</span><span class="n">base</span><span class="o">.</span><span class="n">radius</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">radius</span><span class="o">.</span><span class="n">imag</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">DM</span><span class="p">([</span><span class="n">base</span><span class="o">.</span><span class="n">center</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">center</span><span class="o">.</span><span class="n">imag</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">DM</span><span class="p">([</span><span class="n">base</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">imag</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">theta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">delta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotation</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">rotation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius_scale</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">radius_scale</span>
+        <span class="n">SymbolicElement</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SymbolicArc.point"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicArc.point">[docs]</a>    <span class="k">def</span> <span class="nf">point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">cas</span><span class="o">.</span><span class="n">norm_2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-16</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">)</span> <span class="o">*</span> <span class="n">s</span>
+
+        <span class="n">angle</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">*</span> <span class="n">s</span><span class="p">))</span> <span class="o">*</span> <span class="n">cas</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span>
+        <span class="n">cosr</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rotation</span> <span class="o">*</span> <span class="n">cas</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span><span class="p">)</span>
+        <span class="n">sinr</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rotation</span> <span class="o">*</span> <span class="n">cas</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span><span class="p">)</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius_scale</span>
+
+        <span class="n">p</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">MX</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">cosr</span> <span class="o">*</span> <span class="n">cas</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="o">*</span> <span class="n">radius</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">sinr</span> <span class="o">*</span> <span class="n">cas</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="o">*</span> <span class="n">radius</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">sinr</span> <span class="o">*</span> <span class="n">cas</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="o">*</span> <span class="n">radius</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">cosr</span> <span class="o">*</span> <span class="n">cas</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="o">*</span> <span class="n">radius</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">p</span></div>
+
+<div class="viewcode-block" id="SymbolicArc.translate"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicArc.translate">[docs]</a>    <span class="k">def</span> <span class="nf">translate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">DM</span><span class="p">([</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">+=</span> <span class="n">delta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">+=</span> <span class="n">delta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">+=</span> <span class="n">delta</span></div>
+
+<div class="viewcode-block" id="SymbolicArc.rotate"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicArc.rotate">[docs]</a>    <span class="k">def</span> <span class="nf">rotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">rot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pre_rotate</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">rot</span><span class="nd">@self</span><span class="o">.</span><span class="n">start</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">rot</span><span class="nd">@self</span><span class="o">.</span><span class="n">center</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotation</span> <span class="o">=</span> <span class="n">theta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">rot</span><span class="nd">@self</span><span class="o">.</span><span class="n">end</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_post_rotate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="SymbolicMove"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicMove">[docs]</a><span class="k">class</span> <span class="nc">SymbolicMove</span><span class="p">(</span><span class="n">SymbolicElement</span><span class="p">,</span> <span class="n">Move</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">):</span>
+        <span class="n">SymbolicElement</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SymbolicMove.length"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicMove.length">[docs]</a>    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mf">0.0</span></div></div>
+
+
+<div class="viewcode-block" id="SymbolicClose"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicClose">[docs]</a><span class="k">class</span> <span class="nc">SymbolicClose</span><span class="p">(</span><span class="n">SymbolicElement</span><span class="p">,</span> <span class="n">Close</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">):</span>
+        <span class="n">SymbolicElement</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SymbolicClose.length"><a class="viewcode-back" href="../../api/elements.html#sympathor.elements.SymbolicClose.length">[docs]</a>    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">cas</span><span class="o">.</span><span class="n">norm_2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">))</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,417 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>sympathor.path &mdash; sympathor v0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> sympathor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Docs</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quick-start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../input-formats.html">Input formats</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">sympathor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">sympathor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>sympathor.path</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for sympathor.path</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">sympathor.elements</span> <span class="k">as</span> <span class="nn">elements</span>
+<span class="kn">from</span> <span class="nn">svg.path</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">casadi</span> <span class="k">as</span> <span class="nn">cas</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="SymbolicPath"><a class="viewcode-back" href="../../api/path.html#sympathor.path.SymbolicPath">[docs]</a><span class="k">class</span> <span class="nc">SymbolicPath</span><span class="p">(</span><span class="n">elements</span><span class="o">.</span><span class="n">SymbolicMixin</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A symbolic path description extending `svg.path.Path`.</span>
+
+<span class="sd">    This class mates various symbolic elements by building a composite path \</span>
+<span class="sd">    description. Based on this composite path, properties and quantities of \</span>
+<span class="sd">    differential geometry can be derived, e.g. tangent and normal vectors, or \</span>
+<span class="sd">    the curvature.</span>
+<span class="sd">    This class also implements a convenient path-level access to SVG \</span>
+<span class="sd">    transforms, which are simply delegated to each element.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path : svg.path.Path</span>
+<span class="sd">        An `svg.path.Path` object, e.g. parsed using `svg.path.parse_path()`, \</span>
+<span class="sd">        as done in `sympathor.ParsePaths()`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">Path</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">elements</span><span class="o">.</span><span class="n">SymbolicMixin</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># build path from segments</span>
+        <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">_segments</span><span class="p">:</span>
+            <span class="n">clss</span> <span class="o">=</span> <span class="s1">&#39;Symbolic&#39;</span> <span class="o">+</span> <span class="n">seg</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_segments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">clss</span><span class="p">)(</span><span class="n">seg</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__symbolic_setup</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__symbolic_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># build composite symbolic expression</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_calc_lengths</span><span class="p">()</span>
+        <span class="n">expr</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">MX</span><span class="o">.</span><span class="n">nan</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_segments</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">s_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fractions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">s_max</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="n">expr</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">if_else</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_s</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">cas</span><span class="o">.</span><span class="n">MX</span><span class="o">.</span><span class="n">nan</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">expr</span><span class="p">)</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">s_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fractions</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+                <span class="n">s_loc</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_s</span> <span class="o">-</span> <span class="n">s_min</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lengths</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">expr</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">if_else</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_s</span> <span class="o">&lt;=</span> <span class="n">s_max</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_segments</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="n">s_loc</span><span class="p">),</span> <span class="n">expr</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_point_expr</span> <span class="o">=</span> <span class="n">expr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_point</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="s1">&#39;point&#39;</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="p">],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_point_expr</span><span class="p">])</span>
+
+        <span class="n">dp_ds</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_point_expr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="p">)</span>
+        <span class="c1"># unit tangent vector</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tangent_expr</span> <span class="o">=</span> <span class="n">dp_ds</span> <span class="o">/</span> <span class="n">cas</span><span class="o">.</span><span class="n">norm_2</span><span class="p">(</span><span class="n">dp_ds</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tangent</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="s1">&#39;tangent&#39;</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="p">],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_tangent_expr</span><span class="p">])</span>
+        <span class="n">dt_ds</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tangent_expr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="p">)</span>
+        <span class="c1"># unit normal vector</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_normal_expr</span> <span class="o">=</span> <span class="n">dt_ds</span> <span class="o">/</span> <span class="n">cas</span><span class="o">.</span><span class="n">norm_2</span><span class="p">(</span><span class="n">dt_ds</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_normal</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="s1">&#39;normal&#39;</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="p">],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_normal_expr</span><span class="p">])</span>
+        <span class="c1"># curvature value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_curvature_expr</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">norm_2</span><span class="p">(</span><span class="n">dt_ds</span><span class="p">)</span> <span class="o">/</span> <span class="n">cas</span><span class="o">.</span><span class="n">norm_2</span><span class="p">(</span><span class="n">dp_ds</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_curvature</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="s1">&#39;curvature&#39;</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="p">],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_curvature_expr</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">__maybe_map_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fcn</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="n">s_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">s_</span><span class="p">)</span>
+        <span class="n">fcn_</span> <span class="o">=</span> <span class="n">fcn</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="k">if</span> <span class="n">N</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">fcn</span>
+        <span class="k">return</span> <span class="n">fcn_</span><span class="p">(</span><span class="n">s_</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SymbolicPath.natural_parametrization"><a class="viewcode-back" href="../../api/path.html#sympathor.path.SymbolicPath.natural_parametrization">[docs]</a>    <span class="k">def</span> <span class="nf">natural_parametrization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Toggle natural parametrization of path.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        on : bool</span>
+<span class="sd">            Activate natural parametrization</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">on</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_segments</span><span class="p">:</span>
+                <span class="n">seg</span><span class="o">.</span><span class="n">_natural_parametrization</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_segments</span><span class="p">:</span>
+                <span class="n">seg</span><span class="o">.</span><span class="n">_natural_parametrization</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__symbolic_setup</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SymbolicPath.length"><a class="viewcode-back" href="../../api/path.html#sympathor.path.SymbolicPath.length">[docs]</a>    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute overall length of path.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        length : numpy.float</span>
+<span class="sd">            Length of path</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">length</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="SymbolicPath.point"><a class="viewcode-back" href="../../api/path.html#sympathor.path.SymbolicPath.point">[docs]</a>    <span class="k">def</span> <span class="nf">point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtain point along the path.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s : float or list of float, optional</span>
+<span class="sd">            The parameter value(s) at which the path should be sampled.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        point : casadi.Function or numpy.ndarray</span>
+<span class="sd">            Function of symbolic description of point if no parameter value \</span>
+<span class="sd">            was provided; otherwise an array of point coordinates \</span>
+<span class="sd">            corresponding to the given parameter values.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_point_expr</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__maybe_map_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_point</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SymbolicPath.tangent"><a class="viewcode-back" href="../../api/path.html#sympathor.path.SymbolicPath.tangent">[docs]</a>    <span class="k">def</span> <span class="nf">tangent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtain tangent vector along the path.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s : float or list of float, optional</span>
+<span class="sd">            The parameter value(s) at which the tangent vector should be \</span>
+<span class="sd">            evaluated.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        point : casadi.Function or numpy.ndarray</span>
+<span class="sd">            Function of symbolic description of tangent vector if no parameter \</span>
+<span class="sd">            value was provided; otherwise an array of components of the \</span>
+<span class="sd">            tangent vector corresponding to the given parameter values.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tangent</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__maybe_map_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tangent</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">t</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SymbolicPath.normal"><a class="viewcode-back" href="../../api/path.html#sympathor.path.SymbolicPath.normal">[docs]</a>    <span class="k">def</span> <span class="nf">normal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtain normal vector along the path.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s : float or list of float, optional</span>
+<span class="sd">            The parameter value(s) at which the normal vector should be \</span>
+<span class="sd">            evaluated.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        point : casadi.Function or numpy.ndarray</span>
+<span class="sd">            Function of symbolic description of normal vector if no parameter \</span>
+<span class="sd">            value was provided; otherwise an array of components of the normal \</span>
+<span class="sd">            vector corresponding to the given parameter values.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normal</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__maybe_map_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_normal</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">n</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SymbolicPath.curvature"><a class="viewcode-back" href="../../api/path.html#sympathor.path.SymbolicPath.curvature">[docs]</a>    <span class="k">def</span> <span class="nf">curvature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtain curvature along the path.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s : float or list of float, optional</span>
+<span class="sd">            The parameter value(s) at which the curvature should be evaluated.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        point : casadi.Function or numpy.ndarray</span>
+<span class="sd">            Function of symbolic description of curvature if no parameter \</span>
+<span class="sd">            value was provided; otherwise an array of curvature values \</span>
+<span class="sd">            corresponding to the given parameter values.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_curvature</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__maybe_map_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_curvature</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">c</span><span class="p">)</span></div>
+
+    <span class="c1"># transforms</span>
+<div class="viewcode-block" id="SymbolicPath.matrix"><a class="viewcode-back" href="../../api/path.html#sympathor.path.SymbolicPath.matrix">[docs]</a>    <span class="k">def</span> <span class="nf">matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_segments</span><span class="p">:</span>
+            <span class="n">seg</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__symbolic_setup</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SymbolicPath.translate"><a class="viewcode-back" href="../../api/path.html#sympathor.path.SymbolicPath.translate">[docs]</a>    <span class="k">def</span> <span class="nf">translate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_segments</span><span class="p">:</span>
+            <span class="n">seg</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">dy</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__symbolic_setup</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SymbolicPath.rotate"><a class="viewcode-back" href="../../api/path.html#sympathor.path.SymbolicPath.rotate">[docs]</a>    <span class="k">def</span> <span class="nf">rotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_segments</span><span class="p">:</span>
+            <span class="n">seg</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__symbolic_setup</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SymbolicPath.scale"><a class="viewcode-back" href="../../api/path.html#sympathor.path.SymbolicPath.scale">[docs]</a>    <span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_segments</span><span class="p">:</span>
+            <span class="n">seg</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__symbolic_setup</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SymbolicPath.skewX"><a class="viewcode-back" href="../../api/path.html#sympathor.path.SymbolicPath.skewX">[docs]</a>    <span class="k">def</span> <span class="nf">skewX</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_segments</span><span class="p">:</span>
+            <span class="n">seg</span><span class="o">.</span><span class="n">skewX</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__symbolic_setup</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SymbolicPath.skewY"><a class="viewcode-back" href="../../api/path.html#sympathor.path.SymbolicPath.skewY">[docs]</a>    <span class="k">def</span> <span class="nf">skewY</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_segments</span><span class="p">:</span>
+            <span class="n">seg</span><span class="o">.</span><span class="n">skewY</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__symbolic_setup</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,351 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>sympathor.path &mdash; sympathor v0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="sympathor.parser" href="parser.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> sympathor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Docs</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick-start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../input-formats.html">Input formats</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">sympathor</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="elements.html">sympathor.elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parser.html">sympathor.parser</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">sympathor.path</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">sympathor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">sympathor</a> &raquo;</li>
+        
+      <li>sympathor.path</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/asteinh/sympathor/blob/master/docs/source/api/path.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-sympathor.path">
+<span id="sympathor-path"></span><h1>sympathor.path<a class="headerlink" href="#module-sympathor.path" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="sympathor.path.SymbolicPath">
+<em class="property">class </em><code class="sig-prename descclassname">sympathor.path.</code><code class="sig-name descname">SymbolicPath</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/path.html#SymbolicPath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.path.SymbolicPath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="elements.html#sympathor.elements.SymbolicMixin" title="sympathor.elements.SymbolicMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">sympathor.elements.SymbolicMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">svg.path.path.Path</span></code></p>
+<p>A symbolic path description extending <cite>svg.path.Path</cite>.</p>
+<p>This class mates various symbolic elements by building a composite path     description. Based on this composite path, properties and quantities of     differential geometry can be derived, e.g. tangent and normal vectors, or     the curvature.
+This class also implements a convenient path-level access to SVG     transforms, which are simply delegated to each element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>svg.path.Path</em>) – An <cite>svg.path.Path</cite> object, e.g. parsed using <cite>svg.path.parse_path()</cite>,         as done in <cite>sympathor.ParsePaths()</cite>.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="sympathor.path.SymbolicPath.curvature">
+<code class="sig-name descname">curvature</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/path.html#SymbolicPath.curvature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.path.SymbolicPath.curvature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain curvature along the path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>float</em><em> or </em><em>list of float</em><em>, </em><em>optional</em>) – The parameter value(s) at which the curvature should be evaluated.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>point</strong> – Function of symbolic description of curvature if no parameter             value was provided; otherwise an array of curvature values             corresponding to the given parameter values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>casadi.Function or numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.path.SymbolicPath.length">
+<code class="sig-name descname">length</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/path.html#SymbolicPath.length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.path.SymbolicPath.length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute overall length of path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>length</strong> – Length of path</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>numpy.float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.path.SymbolicPath.matrix">
+<code class="sig-name descname">matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">b</span></em>, <em class="sig-param"><span class="n">c</span></em>, <em class="sig-param"><span class="n">d</span></em>, <em class="sig-param"><span class="n">e</span></em>, <em class="sig-param"><span class="n">f</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/path.html#SymbolicPath.matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.path.SymbolicPath.matrix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.path.SymbolicPath.natural_parametrization">
+<code class="sig-name descname">natural_parametrization</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">on</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/path.html#SymbolicPath.natural_parametrization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.path.SymbolicPath.natural_parametrization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggle natural parametrization of path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>on</strong> (<em>bool</em>) – Activate natural parametrization</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.path.SymbolicPath.normal">
+<code class="sig-name descname">normal</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/path.html#SymbolicPath.normal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.path.SymbolicPath.normal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain normal vector along the path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>float</em><em> or </em><em>list of float</em><em>, </em><em>optional</em>) – The parameter value(s) at which the normal vector should be             evaluated.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>point</strong> – Function of symbolic description of normal vector if no parameter             value was provided; otherwise an array of components of the normal             vector corresponding to the given parameter values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>casadi.Function or numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.path.SymbolicPath.point">
+<code class="sig-name descname">point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/path.html#SymbolicPath.point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.path.SymbolicPath.point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain point along the path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>float</em><em> or </em><em>list of float</em><em>, </em><em>optional</em>) – The parameter value(s) at which the path should be sampled.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>point</strong> – Function of symbolic description of point if no parameter value             was provided; otherwise an array of point coordinates             corresponding to the given parameter values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>casadi.Function or numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.path.SymbolicPath.rotate">
+<code class="sig-name descname">rotate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">theta</span></em>, <em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">y</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/path.html#SymbolicPath.rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.path.SymbolicPath.rotate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.path.SymbolicPath.scale">
+<code class="sig-name descname">scale</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/path.html#SymbolicPath.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.path.SymbolicPath.scale" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.path.SymbolicPath.skewX">
+<code class="sig-name descname">skewX</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">theta</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/path.html#SymbolicPath.skewX"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.path.SymbolicPath.skewX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.path.SymbolicPath.skewY">
+<code class="sig-name descname">skewY</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">theta</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/path.html#SymbolicPath.skewY"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.path.SymbolicPath.skewY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.path.SymbolicPath.tangent">
+<code class="sig-name descname">tangent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/path.html#SymbolicPath.tangent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.path.SymbolicPath.tangent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain tangent vector along the path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>float</em><em> or </em><em>list of float</em><em>, </em><em>optional</em>) – The parameter value(s) at which the tangent vector should be             evaluated.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>point</strong> – Function of symbolic description of tangent vector if no parameter             value was provided; otherwise an array of components of the             tangent vector corresponding to the given parameter values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>casadi.Function or numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.path.SymbolicPath.translate">
+<code class="sig-name descname">translate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dx</span></em>, <em class="sig-param"><span class="n">dy</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/path.html#SymbolicPath.translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.path.SymbolicPath.translate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="parser.html" class="btn btn-neutral float-left" title="sympathor.parser" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,376 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>sympathor.elements &mdash; sympathor v0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="sympathor.parser" href="parser.html" />
+    <link rel="prev" title="sympathor" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> sympathor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Docs</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick-start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../input-formats.html">Input formats</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">sympathor</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">sympathor.elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parser.html">sympathor.parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="path.html">sympathor.path</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">sympathor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">sympathor</a> &raquo;</li>
+        
+      <li>sympathor.elements</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/asteinh/sympathor/blob/master/docs/source/api/elements.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-sympathor.elements">
+<span id="sympathor-elements"></span><h1>sympathor.elements<a class="headerlink" href="#module-sympathor.elements" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="sympathor.elements.SymbolicArc">
+<em class="property">class </em><code class="sig-prename descclassname">sympathor.elements.</code><code class="sig-name descname">SymbolicArc</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">base</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicArc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicArc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sympathor.elements.SymbolicElement" title="sympathor.elements.SymbolicElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">sympathor.elements.SymbolicElement</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">svg.path.path.Arc</span></code></p>
+<dl class="py method">
+<dt id="sympathor.elements.SymbolicArc.point">
+<code class="sig-name descname">point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicArc.point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicArc.point" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.elements.SymbolicArc.rotate">
+<code class="sig-name descname">rotate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">theta</span></em>, <em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">y</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicArc.rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicArc.rotate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.elements.SymbolicArc.translate">
+<code class="sig-name descname">translate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dx</span></em>, <em class="sig-param"><span class="n">dy</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicArc.translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicArc.translate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="sympathor.elements.SymbolicClose">
+<em class="property">class </em><code class="sig-prename descclassname">sympathor.elements.</code><code class="sig-name descname">SymbolicClose</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">base</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicClose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicClose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sympathor.elements.SymbolicElement" title="sympathor.elements.SymbolicElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">sympathor.elements.SymbolicElement</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">svg.path.path.Close</span></code></p>
+<dl class="py method">
+<dt id="sympathor.elements.SymbolicClose.length">
+<code class="sig-name descname">length</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicClose.length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicClose.length" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="sympathor.elements.SymbolicCubicBezier">
+<em class="property">class </em><code class="sig-prename descclassname">sympathor.elements.</code><code class="sig-name descname">SymbolicCubicBezier</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">base</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicCubicBezier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicCubicBezier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sympathor.elements.SymbolicElement" title="sympathor.elements.SymbolicElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">sympathor.elements.SymbolicElement</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">svg.path.path.CubicBezier</span></code></p>
+<dl class="py method">
+<dt id="sympathor.elements.SymbolicCubicBezier.point">
+<code class="sig-name descname">point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicCubicBezier.point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicCubicBezier.point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the x,y position at a certain position of the path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.elements.SymbolicCubicBezier.rotate">
+<code class="sig-name descname">rotate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">theta</span></em>, <em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">y</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicCubicBezier.rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicCubicBezier.rotate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.elements.SymbolicCubicBezier.translate">
+<code class="sig-name descname">translate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dx</span></em>, <em class="sig-param"><span class="n">dy</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicCubicBezier.translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicCubicBezier.translate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="sympathor.elements.SymbolicElement">
+<em class="property">class </em><code class="sig-prename descclassname">sympathor.elements.</code><code class="sig-name descname">SymbolicElement</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">base</span></em>, <em class="sig-param"><span class="n">expr_from</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicElement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sympathor.elements.SymbolicMixin" title="sympathor.elements.SymbolicMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">sympathor.elements.SymbolicMixin</span></code></a></p>
+<dl class="py method">
+<dt id="sympathor.elements.SymbolicElement.arclength">
+<code class="sig-name descname">arclength</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicElement.arclength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicElement.arclength" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.elements.SymbolicElement.length">
+<code class="sig-name descname">length</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicElement.length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicElement.length" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.elements.SymbolicElement.matrix">
+<code class="sig-name descname">matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">b</span></em>, <em class="sig-param"><span class="n">c</span></em>, <em class="sig-param"><span class="n">d</span></em>, <em class="sig-param"><span class="n">e</span></em>, <em class="sig-param"><span class="n">f</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicElement.matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicElement.matrix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.elements.SymbolicElement.rotate">
+<code class="sig-name descname">rotate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">theta</span></em>, <em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">y</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicElement.rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicElement.rotate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.elements.SymbolicElement.scale">
+<code class="sig-name descname">scale</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicElement.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicElement.scale" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.elements.SymbolicElement.skewX">
+<code class="sig-name descname">skewX</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">theta</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicElement.skewX"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicElement.skewX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.elements.SymbolicElement.skewY">
+<code class="sig-name descname">skewY</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">theta</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicElement.skewY"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicElement.skewY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.elements.SymbolicElement.translate">
+<code class="sig-name descname">translate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dx</span></em>, <em class="sig-param"><span class="n">dy</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicElement.translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicElement.translate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="sympathor.elements.SymbolicLine">
+<em class="property">class </em><code class="sig-prename descclassname">sympathor.elements.</code><code class="sig-name descname">SymbolicLine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">base</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicLine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicLine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sympathor.elements.SymbolicElement" title="sympathor.elements.SymbolicElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">sympathor.elements.SymbolicElement</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">svg.path.path.Line</span></code></p>
+<dl class="py method">
+<dt id="sympathor.elements.SymbolicLine.length">
+<code class="sig-name descname">length</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicLine.length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicLine.length" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="sympathor.elements.SymbolicMixin">
+<em class="property">class </em><code class="sig-prename descclassname">sympathor.elements.</code><code class="sig-name descname">SymbolicMixin</code><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="sympathor.elements.SymbolicMixin.arclength">
+<code class="sig-name descname">arclength</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicMixin.arclength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicMixin.arclength" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="sympathor.elements.SymbolicMove">
+<em class="property">class </em><code class="sig-prename descclassname">sympathor.elements.</code><code class="sig-name descname">SymbolicMove</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">base</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicMove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicMove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sympathor.elements.SymbolicElement" title="sympathor.elements.SymbolicElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">sympathor.elements.SymbolicElement</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">svg.path.path.Move</span></code></p>
+<dl class="py method">
+<dt id="sympathor.elements.SymbolicMove.length">
+<code class="sig-name descname">length</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicMove.length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicMove.length" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="sympathor.elements.SymbolicQuadraticBezier">
+<em class="property">class </em><code class="sig-prename descclassname">sympathor.elements.</code><code class="sig-name descname">SymbolicQuadraticBezier</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">base</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicQuadraticBezier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicQuadraticBezier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sympathor.elements.SymbolicElement" title="sympathor.elements.SymbolicElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">sympathor.elements.SymbolicElement</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">svg.path.path.QuadraticBezier</span></code></p>
+<dl class="py method">
+<dt id="sympathor.elements.SymbolicQuadraticBezier.point">
+<code class="sig-name descname">point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicQuadraticBezier.point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicQuadraticBezier.point" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.elements.SymbolicQuadraticBezier.rotate">
+<code class="sig-name descname">rotate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">theta</span></em>, <em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">y</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicQuadraticBezier.rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicQuadraticBezier.rotate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sympathor.elements.SymbolicQuadraticBezier.translate">
+<code class="sig-name descname">translate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dx</span></em>, <em class="sig-param"><span class="n">dy</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#SymbolicQuadraticBezier.translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.SymbolicQuadraticBezier.translate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="sympathor.elements.quadrature">
+<code class="sig-prename descclassname">sympathor.elements.</code><code class="sig-name descname">quadrature</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fcn</span></em>, <em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">b</span></em>, <em class="sig-param"><span class="n">N</span><span class="o">=</span><span class="default_value">100</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sympathor/elements.html#quadrature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sympathor.elements.quadrature" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="parser.html" class="btn btn-neutral float-right" title="sympathor.parser" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="sympathor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
