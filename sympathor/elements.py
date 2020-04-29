@@ -81,7 +81,9 @@ class SymbolicElement(SymbolicMixin):
     def scale(self, x, y=None):
         if y is None:
             y = x
-        raise NotImplementedError  # TODO
+        scaler = cas.DM([x, y])
+        self.start *= scaler
+        self.end *= scaler
 
     def skewX(self, theta):
         raise NotImplementedError  # TODO
