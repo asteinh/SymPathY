@@ -86,9 +86,9 @@ workflows:
       - publish_coverage:
           requires:
             - test
-          # filters:
-          #   branches:
-          #     only: master
+          filters:
+            branches:
+              only: master
       - build_docs
       - deploy_docs:
           requires:
