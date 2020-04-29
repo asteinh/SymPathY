@@ -21,7 +21,27 @@ jobs:
       - checkout
       - run:
           name: Run unit tests
-          command: ls -l
+          command: coverage run -m nose2 -vv && coverage report
+      - run:
+          name: Generate HTML report
+          command: coverage html
+      - persist_to_workspace:
+          root: ~/project/
+          paths:
+            - .coverage
+            - coverage_html
+      - store_artifacts:
+          path: coverage_html
+
+  publish_coverage:
+    executor: default
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project/
+      - run:
+          name: Upload coverage to codecov
+          command: codecov --token=$CODECOV_TOKEN
 
   # build documentation with sphinx
   build_docs:
@@ -47,6 +67,9 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/project/
+      - run:
+          name: Move coverage report
+          command: if [ -d coverage_html ]; then mv coverage_html docs/build/html/coverage; fi
       - gh-pages/deploy:
           build-dir: docs/build/html
           ssh-fingerprints: 11:75:2a:09:0c:45:4a:e9:79:91:ef:ed:a1:52:cd:eb
@@ -60,6 +83,12 @@ workflows:
   test_and_deploy:
     jobs:
       - test
+      - publish_coverage:
+          requires:
+            - test
+          # filters:
+          #   branches:
+          #     only: master
       - build_docs
       - deploy_docs:
           requires:
