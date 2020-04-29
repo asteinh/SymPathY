@@ -7,6 +7,9 @@ executors:
     docker:
       - image: asteinh/docker:sympathor
 
+orbs:
+  gh-pages: sugarshin/gh-pages@0.0.6
+
 ################################################################################
 # JOBS
 ################################################################################
@@ -37,17 +40,16 @@ jobs:
 
   # deploy documentation to github pages
   deploy_docs:
-    executor: default
+    working_directory: ~/project/
+    docker:
+      - image: circleci/buildpack-deps
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - ""
       - checkout
       - attach_workspace:
           at: ~/project/
-      - run:
-          name: gh-pages
-          command: gh-pages --dotfiles --message "[skip ci] Update pages" --dist docs/build/html
+      - gh-pages/deploy:
+          build-dir: docs/build/html
+          ssh-fingerprints: 11:75:2a:09:0c:45:4a:e9:79:91:ef:ed:a1:52:cd:eb
 
 ################################################################################
 # WORKFLOWS

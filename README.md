@@ -6,10 +6,5 @@ At reasonable size, sympathor enables you to extract a fully symbolic descriptio
 
 In short, sympathor seeks to single-handedly provide properties and quantities of differential geometry at high precision.
 
-## Get started
-This little tool is written for Python 3. You can find all dependencies in `requirements.txt` and easily install the package by running `python setup.py install`.
-
-The easiest way to get started with sympathor is by having a look at the examples.
-As a motivation, look at the imaginary race track below with its Frenet frame and curvature visualized:
-
-![](docs/img/racetrack.png)
+## First steps
+For a quick start guide, documented examples and details on the API of sympathor see the [documentation](https://asteinh.github.io/sympathor/).
