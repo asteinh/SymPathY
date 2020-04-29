@@ -1,0 +1,67 @@
+version: 2.1
+
+executors:
+  default:
+    working_directory: ~/project/
+    shell: /bin/bash
+    docker:
+      - image: asteinh/docker:sympathor
+
+################################################################################
+# JOBS
+################################################################################
+jobs:
+  # run unit tests
+  test:
+    executor: default
+    steps:
+      - checkout
+      - run:
+          name: Run unit tests
+          command: ls -l
+
+  # build documentation with sphinx
+  build_docs:
+    executor: default
+    steps:
+      - checkout
+      - run:
+          name: Make HTML
+          command: cd docs && make html
+      - persist_to_workspace:
+          root: ~/project/
+          paths:
+            - docs/build/html
+      - store_artifacts:
+          path: docs/build/
+
+  # deploy documentation to github pages
+  deploy_docs:
+    executor: default
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - ""
+      - checkout
+      - attach_workspace:
+          at: ~/project/
+      - run:
+          name: gh-pages
+          command: gh-pages --dotfiles --message "[skip ci] Update pages" --dist docs/build/html
+
+################################################################################
+# WORKFLOWS
+################################################################################
+
+workflows:
+  version: 2
+  test_and_deploy:
+    jobs:
+      - test
+      - build_docs
+      - deploy_docs:
+          requires:
+            - build_docs
+          filters:
+            branches:
+              only: master
