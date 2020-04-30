@@ -2,7 +2,7 @@ from svg.path import Line, CubicBezier, QuadraticBezier, Arc, Move, Close
 import casadi as cas
 
 
-def quadrature(fcn, a, b, N=100):
+def quadrature(fcn, a, b, N=200):
     # Simpson's rule
     N += 1 if N % 2 != 0 else 0
     fcnmap = fcn.map(N+1)
@@ -18,6 +18,8 @@ class SymbolicMixin(object):
         self._eps = 1e-12
 
     def arclength(self, s):
+        if s == 0:
+            return 0.0
         length = cas.integrator(
             'integrator',
             'rk',
@@ -32,13 +34,10 @@ class SymbolicElement(SymbolicMixin):
         SymbolicMixin.__init__(self)
         self.start = cas.DM([base.start.real, base.start.imag])
         self.end = cas.DM([base.end.real, base.end.imag])
-        if expr_from:
-            self._expr = expr_from(self, self._s)
-        else:
-            self._expr = self.point(self._s)
 
         self._natural_parametrization = False
         self._rescaler = self._setup_rescaler()
+        self._expr = self.point(self._s)
 
     def arclength(self, s):
         # approximation of arc length for elements
@@ -55,7 +54,9 @@ class SymbolicElement(SymbolicMixin):
         return self.arclength(1.0)
 
     def matrix(self, a, b, c, d, e, f):
-        rot = cas.DM([[a, c], [b, d]])
+        rot = cas.DM(2, 2)
+        rot[0, :] = cas.DM([a, c])
+        rot[1, :] = cas.DM([b, d])
         delta = cas.DM([e, f])
         self.start = rot@self.start + delta
         self.end = rot@self.end + delta
@@ -100,8 +101,8 @@ class SymbolicLine(SymbolicElement, Line):
     def __eq__(self, other):
         if not isinstance(other, SymbolicLine):
             return NotImplemented
-        id_start = cas.norm_2(self.start - other.start) < self._eps
-        id_end = cas.norm_2(self.end - other.end) < self._eps
+        id_start = bool(cas.norm_2(self.start - other.start) < self._eps)
+        id_end = bool(cas.norm_2(self.end - other.end) < self._eps)
         return id_start and id_end
 
     def length(self, **kwargs):
@@ -114,11 +115,19 @@ class SymbolicCubicBezier(SymbolicElement, CubicBezier):
         self.control2 = cas.DM([base.control2.real, base.control2.imag])
         SymbolicElement.__init__(self, base, expr_from=CubicBezier.point)
 
+    def __eq__(self, other):
+        if not isinstance(other, SymbolicCubicBezier):
+            return NotImplemented
+        id_start = bool(cas.norm_2(self.start - other.start) < self._eps)
+        id_ctrl1 = bool(cas.norm_2(self.control1 - other.control1) < self._eps)
+        id_ctrl2 = bool(cas.norm_2(self.control2 - other.control2) < self._eps)
+        id_end = bool(cas.norm_2(self.end - other.end) < self._eps)
+        return id_start and id_ctrl1 and id_ctrl2 and id_end
+
     def point(self, s):
         if self._natural_parametrization:
-            return CubicBezier.point(self, self._rescaler(s, s))
-        else:
-            return CubicBezier.point(self, s)
+            s = self._rescaler(s, s)
+        return CubicBezier.point(self, s)
 
     def translate(self, dx, dy=0):
         delta = cas.DM([dx, dy])
@@ -135,6 +144,15 @@ class SymbolicCubicBezier(SymbolicElement, CubicBezier):
         self.end = rot@self.end
         self._post_rotate(x, y)
 
+    def scale(self, x, y=None):
+        if y is None:
+            y = x
+        scaler = cas.DM([x, y])
+        self.start *= scaler
+        self.control1 *= scaler
+        self.control2 *= scaler
+        self.end *= scaler
+
 
 class SymbolicQuadraticBezier(SymbolicElement, QuadraticBezier):
     def __init__(self, base):
@@ -143,9 +161,8 @@ class SymbolicQuadraticBezier(SymbolicElement, QuadraticBezier):
 
     def point(self, s):
         if self._natural_parametrization:
-            return QuadraticBezier.point(self, self._rescaler(s, s))
-        else:
-            return QuadraticBezier.point(self, s)
+            s = self._rescaler(s, s)
+        return QuadraticBezier.point(self, s)
 
     def translate(self, dx, dy=0):
         delta = cas.DM([dx, dy])
@@ -209,6 +226,13 @@ class SymbolicMove(SymbolicElement, Move):
     def __init__(self, base):
         SymbolicElement.__init__(self, base)
 
+    def __eq__(self, other):
+        if not isinstance(other, SymbolicMove):
+            return NotImplemented
+        id_start = bool(cas.norm_2(self.start - other.start) < self._eps)
+        id_end = bool(cas.norm_2(self.end - other.end) < self._eps)
+        return id_start and id_end
+
     def length(self, **kwargs):
         return 0.0
 
@@ -216,6 +240,13 @@ class SymbolicMove(SymbolicElement, Move):
 class SymbolicClose(SymbolicElement, Close):
     def __init__(self, base):
         SymbolicElement.__init__(self, base)
+
+    def __eq__(self, other):
+        if not isinstance(other, SymbolicClose):
+            return NotImplemented
+        id_start = bool(cas.norm_2(self.start - other.start) < self._eps)
+        id_end = bool(cas.norm_2(self.end - other.end) < self._eps)
+        return id_start and id_end
 
     def length(self, **kwargs):
         return cas.norm_2(self.end-self.start)
