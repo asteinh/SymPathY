@@ -15,6 +15,7 @@ class SymbolicMixin(object):
     def __init__(self):
         self._s = cas.MX.sym('s')
         self._expr = cas.MX.nan(2, 1)
+        self._eps = 1e-12
 
     def arclength(self, s):
         length = cas.integrator(
@@ -51,7 +52,7 @@ class SymbolicElement(SymbolicMixin):
         return cas.rootfinder('r', 'newton', fcn)
 
     def length(self, **kwargs):
-        return float(self.arclength(1.0))
+        return self.arclength(1.0)
 
     def matrix(self, a, b, c, d, e, f):
         rot = cas.DM([[a, c], [b, d]])
@@ -96,8 +97,15 @@ class SymbolicLine(SymbolicElement, Line):
     def __init__(self, base):
         SymbolicElement.__init__(self, base)
 
+    def __eq__(self, other):
+        if not isinstance(other, SymbolicLine):
+            return NotImplemented
+        id_start = cas.norm_2(self.start - other.start) < self._eps
+        id_end = cas.norm_2(self.end - other.end) < self._eps
+        return id_start and id_end
+
     def length(self, **kwargs):
-        return float(cas.norm_2(self.end-self.start))
+        return cas.norm_2(self.end-self.start)
 
 
 class SymbolicCubicBezier(SymbolicElement, CubicBezier):
@@ -210,4 +218,4 @@ class SymbolicClose(SymbolicElement, Close):
         SymbolicElement.__init__(self, base)
 
     def length(self, **kwargs):
-        return float(cas.norm_2(self.end-self.start))
+        return cas.norm_2(self.end-self.start)

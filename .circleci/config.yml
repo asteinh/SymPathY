@@ -21,7 +21,7 @@ jobs:
       - checkout
       - run:
           name: Run unit tests
-          command: coverage run -m nose2 -vv && coverage report
+          command: coverage run -m pytest -vv && coverage report
       - run:
           name: Generate HTML report
           command: coverage html
