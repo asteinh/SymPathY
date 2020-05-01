@@ -51,14 +51,14 @@ class SymbolicPath(elements.SymbolicMixin, Path):
 
         dp_ds = cas.jacobian(self._point_expr, self._s)
         # unit tangent vector
-        self._tangent_expr = dp_ds / cas.norm_2(dp_ds)
+        self._tangent_expr = cas.if_else(cas.norm_2(dp_ds) > 0, dp_ds / cas.norm_2(dp_ds), cas.DM([0, 0]))
         self._tangent = cas.Function('tangent', [self._s], [self._tangent_expr])
         dt_ds = cas.jacobian(self._tangent_expr, self._s)
         # unit normal vector
-        self._normal_expr = dt_ds / cas.norm_2(dt_ds)
+        self._normal_expr = cas.if_else(cas.norm_2(dt_ds) > 0, dt_ds / cas.norm_2(dt_ds), cas.DM([0, 0]))
         self._normal = cas.Function('normal', [self._s], [self._normal_expr])
         # curvature value
-        self._curvature_expr = cas.norm_2(dt_ds) / cas.norm_2(dp_ds)
+        self._curvature_expr = cas.if_else(cas.norm_2(dp_ds) > 0, cas.norm_2(dt_ds) / cas.norm_2(dp_ds), 0.0)
         self._curvature = cas.Function('curvature', [self._s], [self._curvature_expr])
 
     def __maybe_map_function(self, fcn, s):
