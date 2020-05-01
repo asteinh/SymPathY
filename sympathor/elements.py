@@ -48,10 +48,10 @@ class SymbolicElement(SymbolicMixin):
     def __eq__(self, other):
         if not isinstance(other, type(self)):
             return NotImplemented
-        is_eq = True
         for p in [*self.points, *self.params]:
-            is_eq = is_eq and (cas.norm_2(getattr(self, p) - getattr(other, p)) < self._eps)
-        return is_eq
+            if cas.norm_2(getattr(self, p) - getattr(other, p)) > self._eps:
+                return False
+        return True
 
     def _setup_rescaler(self):
         # find a point where arc length == s * length
@@ -156,10 +156,12 @@ class SymbolicArc(SymbolicElement, Arc):
         self.delta = base.delta
         self.rotation = base.rotation
         self.radius_scale = base.radius_scale
+        self.arc = base.arc
+        self.sweep = base.sweep
         SymbolicElement.__init__(self, base)
         self.points.extend(['center'])
         # radius scales, but e.g. doesn't rotate; thus, not in points attribute
-        self.params.extend(['radius', 'theta', 'delta', 'rotation', 'radius_scale'])
+        self.params.extend(['radius', 'theta', 'delta', 'rotation', 'radius_scale', 'arc', 'sweep'])
 
     def point(self, s):
         if self.natural_parametrization:

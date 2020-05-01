@@ -28,7 +28,8 @@ def rotation_matrix(theta):
 # TESTS
 def test_general(line):
     # __eq__
-    assert not (line['obj'] == QuadraticBezier(0, 1+1j, 2))
+    assert not line['obj'] == QuadraticBezier(0, 1+1j, 2)
+    assert not line['obj'] == SymbolicLine(Line(0 + 0j, 10 + 0j))
     line_ = copy.copy(line['obj'])
     assert line_ == line['obj']
 
