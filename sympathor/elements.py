@@ -158,6 +158,7 @@ class SymbolicArc(SymbolicElement, Arc):
         self.radius_scale = base.radius_scale
         SymbolicElement.__init__(self, base)
         self.points.extend(['center'])
+        # radius scales, but e.g. doesn't rotate; thus, not in points attribute
         self.params.extend(['radius', 'theta', 'delta', 'rotation', 'radius_scale'])
 
     def point(self, s):
@@ -179,6 +180,11 @@ class SymbolicArc(SymbolicElement, Arc):
 
     def length(self, **kwargs):
         return self.arclength(1.0)
+
+    def scale(self, x, y=None):
+        y = x if y is None else y
+        self.radius = self.radius*cas.DM([x, y])
+        SymbolicElement.scale(self, x, y)
 
 
 class SymbolicMove(SymbolicElement, Move):
