@@ -8,17 +8,17 @@ class SymbolicPath(elements.SymbolicMixin, Path):
     """
     A symbolic path description extending `svg.path.Path`.
 
-    This class mates various symbolic elements by building a composite path \
-    description. Based on this composite path, properties and quantities of \
-    differential geometry can be derived, e.g. tangent and normal vectors, or \
+    This class mates various symbolic elements by building a composite path
+    description. Based on this composite path, properties and quantities of
+    differential geometry can be derived, e.g. tangent and normal vectors, or
     the curvature.
-    This class also implements a convenient path-level access to SVG \
+    This class also implements a convenient path-level access to SVG
     transforms, which are simply delegated to each element.
 
     Parameters
     ----------
     path : svg.path.Path
-        An `svg.path.Path` object, e.g. parsed using `svg.path.parse_path()`, \
+        An `svg.path.Path` object, e.g. parsed using `svg.path.parse_path()`,
         as done in `sympathor.ParsePaths()`.
 
     """
@@ -76,12 +76,8 @@ class SymbolicPath(elements.SymbolicMixin, Path):
         on : bool
             Activate natural parametrization
         """
-        if on:
-            for seg in self._segments:
-                seg._natural_parametrization = True
-        else:
-            for seg in self._segments:
-                seg._natural_parametrization = False
+        for seg in self._segments:
+            seg.set_natural_parametrization(on)
         self.__symbolic_setup()
 
     def length(self):
@@ -108,8 +104,8 @@ class SymbolicPath(elements.SymbolicMixin, Path):
         Returns
         -------
         point : casadi.Function or numpy.ndarray
-            Function of symbolic description of point if no parameter value \
-            was provided; otherwise an array of point coordinates \
+            Function of symbolic description of point if no parameter value
+            was provided; otherwise an array of point coordinates
             corresponding to the given parameter values.
 
         """
@@ -126,14 +122,14 @@ class SymbolicPath(elements.SymbolicMixin, Path):
         Parameters
         ----------
         s : float or list of float, optional
-            The parameter value(s) at which the tangent vector should be \
+            The parameter value(s) at which the tangent vector should be
             evaluated.
 
         Returns
         -------
         point : casadi.Function or numpy.ndarray
-            Function of symbolic description of tangent vector if no parameter \
-            value was provided; otherwise an array of components of the \
+            Function of symbolic description of tangent vector if no parameter
+            value was provided; otherwise an array of components of the
             tangent vector corresponding to the given parameter values.
 
         """
@@ -150,14 +146,14 @@ class SymbolicPath(elements.SymbolicMixin, Path):
         Parameters
         ----------
         s : float or list of float, optional
-            The parameter value(s) at which the normal vector should be \
+            The parameter value(s) at which the normal vector should be
             evaluated.
 
         Returns
         -------
         point : casadi.Function or numpy.ndarray
-            Function of symbolic description of normal vector if no parameter \
-            value was provided; otherwise an array of components of the normal \
+            Function of symbolic description of normal vector if no parameter
+            value was provided; otherwise an array of components of the normal
             vector corresponding to the given parameter values.
 
         """
@@ -179,8 +175,8 @@ class SymbolicPath(elements.SymbolicMixin, Path):
         Returns
         -------
         point : casadi.Function or numpy.ndarray
-            Function of symbolic description of curvature if no parameter \
-            value was provided; otherwise an array of curvature values \
+            Function of symbolic description of curvature if no parameter
+            value was provided; otherwise an array of curvature values
             corresponding to the given parameter values.
 
         """

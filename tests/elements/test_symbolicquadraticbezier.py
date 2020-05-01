@@ -35,7 +35,7 @@ def test_point(curve, sval):
 
     # test natural parametrization
     p_ = curve['base'].point(float(curve['obj']._rescaler(sval, sval)))
-    curve['obj']._natural_parametrization = True
+    curve['obj'].set_natural_parametrization(True)
     assert cas.norm_2(curve['obj'].point(sval) - cas.DM([p_.real, p_.imag])) == 0
 
 
