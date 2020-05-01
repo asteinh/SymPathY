@@ -42,8 +42,8 @@ class SymbolicElement(SymbolicMixin):
         self.points = ['start', 'end']
         self.params = []
 
-        self._rescaler = self._setup_rescaler()
         self._expr = self.point(self._s)
+        self._rescaler = self._setup_rescaler()
 
     def __eq__(self, other):
         if not isinstance(other, type(self)):
@@ -59,7 +59,7 @@ class SymbolicElement(SymbolicMixin):
         fcn = cas.Function('fcn', [self._s, s_noli], [self.arclength(self._s) - s_noli*self.length()])
         return cas.rootfinder('r', 'newton', fcn)
 
-    def set_natural_parametrization(self, set):
+    def set_natural_parametrization(self, set=False):
         self.natural_parametrization = set
 
     def arclength(self, s):
@@ -157,10 +157,12 @@ class SymbolicArc(SymbolicElement, Arc):
         self.rotation = base.rotation
         self.radius_scale = base.radius_scale
         SymbolicElement.__init__(self, base)
-        self.points.extend(['radius', 'center'])
-        self.params.extend(['theta', 'delta', 'rotation', 'radius_scale'])
+        self.points.extend(['center'])
+        self.params.extend(['radius', 'theta', 'delta', 'rotation', 'radius_scale'])
 
     def point(self, s):
+        if self.natural_parametrization:
+            s = self._rescaler(s, s)
         angle = (self.theta + (self.delta * s)) * cas.pi / 180
         cosr = cas.cos(self.rotation * cas.pi / 180)
         sinr = cas.sin(self.rotation * cas.pi / 180)

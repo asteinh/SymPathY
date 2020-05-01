@@ -67,7 +67,7 @@ class SymbolicPath(elements.SymbolicMixin, Path):
         fcn_ = fcn.map(N) if N > 1 else fcn
         return fcn_(s_)
 
-    def natural_parametrization(self, on=True):
+    def set_natural_parametrization(self, new_state=True):
         """
         Toggle natural parametrization of path.
 
@@ -77,7 +77,7 @@ class SymbolicPath(elements.SymbolicMixin, Path):
             Activate natural parametrization
         """
         for seg in self._segments:
-            seg.set_natural_parametrization(on)
+            seg.set_natural_parametrization(set=new_state)
         self.__symbolic_setup()
 
     def length(self):
