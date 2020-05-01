@@ -11,6 +11,10 @@ def quadrature(fcn, a, b, N=200):
     return (b-a)/N/3 * (fvals[0] + 4*cas.sum2(fvals[1::2]) + 2*cas.sum2(fvals[2:-2:2]) + fvals[-1])
 
 
+def _imag_to_coord(val):
+    return cas.DM([val.real, val.imag])
+
+
 class SymbolicMixin(object):
     def __init__(self):
         self._s = cas.MX.sym('s')
@@ -32,8 +36,8 @@ class SymbolicMixin(object):
 class SymbolicElement(SymbolicMixin):
     def __init__(self, base, expr_from=None):
         SymbolicMixin.__init__(self)
-        self.start = cas.DM([base.start.real, base.start.imag])
-        self.end = cas.DM([base.end.real, base.end.imag])
+        self.start = _imag_to_coord(base.start)
+        self.end = _imag_to_coord(base.end)
 
         self._natural_parametrization = False
         self._rescaler = self._setup_rescaler()
@@ -113,7 +117,7 @@ class SymbolicCubicBezier(SymbolicElement, CubicBezier):
     def __init__(self, base):
         self.control1 = cas.DM([base.control1.real, base.control1.imag])
         self.control2 = cas.DM([base.control2.real, base.control2.imag])
-        SymbolicElement.__init__(self, base, expr_from=CubicBezier.point)
+        SymbolicElement.__init__(self, base)
 
     def __eq__(self, other):
         if not isinstance(other, SymbolicCubicBezier):
@@ -157,7 +161,15 @@ class SymbolicCubicBezier(SymbolicElement, CubicBezier):
 class SymbolicQuadraticBezier(SymbolicElement, QuadraticBezier):
     def __init__(self, base):
         self.control = cas.DM([base.control.real, base.control.imag])
-        SymbolicElement.__init__(self, base, expr_from=QuadraticBezier.point)
+        SymbolicElement.__init__(self, base)
+
+    def __eq__(self, other):
+        if not isinstance(other, SymbolicQuadraticBezier):
+            return NotImplemented
+        id_start = bool(cas.norm_2(self.start - other.start) < self._eps)
+        id_ctrl = bool(cas.norm_2(self.control - other.control) < self._eps)
+        id_end = bool(cas.norm_2(self.end - other.end) < self._eps)
+        return id_start and id_ctrl and id_end
 
     def point(self, s):
         if self._natural_parametrization:
@@ -176,6 +188,14 @@ class SymbolicQuadraticBezier(SymbolicElement, QuadraticBezier):
         self.control = rot@self.control
         self.end = rot@self.end
         self._post_rotate(x, y)
+
+    def scale(self, x, y=None):
+        if y is None:
+            y = x
+        scaler = cas.DM([x, y])
+        self.start *= scaler
+        self.control *= scaler
+        self.end *= scaler
 
 
 class SymbolicArc(SymbolicElement, Arc):
