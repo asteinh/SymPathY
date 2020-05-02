@@ -42,19 +42,31 @@ class SymbolicPath(elements.SymbolicMixin, Path):
             s_min = self._fractions[i-1] if i > 0 else 0
             s_loc = (self._s - s_min) / self._lengths[i]
             expr = cas.if_else(self._s <= s_max, self._segments[i].point(s_loc), expr)
-        self._point_expr = expr
-        self._point = cas.Function('point', [self._s], [self._point_expr])
+        self._expr = expr
+        self._point = cas.Function('point', [self._s], [self._expr])
 
-        dp_ds = cas.jacobian(self._point_expr, self._s)
+        dp_ds = cas.jacobian(self._expr, self._s)
         # unit tangent vector
-        self._tangent_expr = cas.if_else(cas.norm_2(dp_ds) > 0, dp_ds / cas.norm_2(dp_ds), cas.DM([0, 0]))
+        self._tangent_expr = cas.if_else(
+            cas.norm_2(dp_ds) > 0,
+            dp_ds / cas.norm_2(dp_ds),
+            cas.DM([0, 0])
+        )
         self._tangent = cas.Function('tangent', [self._s], [self._tangent_expr])
         dt_ds = cas.jacobian(self._tangent_expr, self._s)
         # unit normal vector
-        self._normal_expr = cas.if_else(cas.norm_2(dt_ds) > 0, dt_ds / cas.norm_2(dt_ds), cas.DM([0, 0]))
+        self._normal_expr = cas.if_else(
+            cas.norm_2(dt_ds) > 0,
+            dt_ds / cas.norm_2(dt_ds),
+            cas.vertcat(self._tangent_expr[1], -self._tangent_expr[0])
+        )
         self._normal = cas.Function('normal', [self._s], [self._normal_expr])
         # curvature value
-        self._curvature_expr = cas.if_else(cas.norm_2(dp_ds) > 0, cas.norm_2(dt_ds) / cas.norm_2(dp_ds), 0.0)
+        self._curvature_expr = cas.if_else(
+            cas.norm_2(dp_ds) > 0,
+            cas.norm_2(dt_ds) / cas.norm_2(dp_ds),
+            cas.DM(0)
+        )
         self._curvature = cas.Function('curvature', [self._s], [self._curvature_expr])
 
     def __maybe_map_function(self, fcn, s):
@@ -116,7 +128,7 @@ class SymbolicPath(elements.SymbolicMixin, Path):
 
         """
         if s is None:
-            return self._point_expr
+            return self._point
         else:
             p = self.__maybe_map_function(self._point, s)
             return np.array(p)

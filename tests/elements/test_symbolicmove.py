@@ -1,32 +1,19 @@
-from tests.elements.conftest import EPSILON, Line, Move, SymbolicMove
-
 import pytest
-import casadi as cas
-import copy
+from tests.mixins import Elements, Transforms
+from svg.path import Line, Move
+from sympathor.elements import SymbolicMove
 
 
-@pytest.fixture(params=[
-    (100 - 10j),
-    (-13.23 + 1000.2j)
-])
-def move(request):
-    move_ = Move(request.param)
-    return {
-        'obj': SymbolicMove(move_),
-        'start': cas.DM([request.param.real, request.param.imag]),
-        'end': cas.DM([request.param.real, request.param.imag]),
-        'base': move_
-    }
+class TestMove(Transforms, Elements):
+    @pytest.fixture(params=[
+        (100 - 10j),
+        (-13.23 + 1000.2j)
+    ])
+    def element(self, request):
+        move_ = Move(request.param)
+        obj = SymbolicMove(move_)
+        return {'obj': obj, 'base': move_}
 
-
-# TESTS
-def test_general(move):
-    # __eq__
-    assert not (move['obj'] == Line(0, 1+1j))
-    move_ = copy.copy(move['obj'])
-    assert move_ == move['obj']
-
-
-def test_length(move):
-    # test against parent's implementation
-    assert cas.fabs(move['obj'].length() - move['base'].length()) < EPSILON
+    def test_eq(self, element):
+        Elements.test_eq(self, element)
+        assert not (element['obj'] == Line(0, 1+1j))
