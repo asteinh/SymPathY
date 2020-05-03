@@ -49,7 +49,7 @@ class SymbolicElement(SymbolicMixin):
         if not isinstance(other, type(self)):
             return NotImplemented
         for p in [*self.points, *self.params]:
-            if cas.norm_2(getattr(self, p) - getattr(other, p)) > self._eps:
+            if cas.norm_fro(getattr(self, p) - getattr(other, p)) > self._eps:
                 return False
         return True
 
@@ -72,42 +72,35 @@ class SymbolicElement(SymbolicMixin):
 
     # TRANSFORMS
     def matrix(self, a, b, c, d, e, f):
-        rot = cas.DM(2, 2)
-        rot[0, :] = cas.DM([a, c])
-        rot[1, :] = cas.DM([b, d])
-        delta = cas.DM([e, f])
+        rot = cas.vertcat(cas.horzcat(a, c), cas.horzcat(b, d))
+        delta = cas.vertcat(e, f)
         for p in self.points:
             p_ = getattr(self, p)
             setattr(self, p, rot@p_ + delta)
 
     def translate(self, dx, dy=0):
-        delta = cas.DM([dx, dy])
-        for p in self.points:
-            p_ = getattr(self, p)
-            setattr(self, p, p_ + delta)
+        self.matrix(1, 0, 0, 1, dx, dy)
 
     def rotate(self, theta, x=0, y=0):
         self.translate(dx=-x, dy=-y)
-        rot = cas.DM([[+cas.cos(theta / 180 * cas.pi), -cas.sin(theta / 180 * cas.pi)],
-                      [+cas.sin(theta / 180 * cas.pi), +cas.cos(theta / 180 * cas.pi)]])
-        for p in self.points:
-            p_ = getattr(self, p)
-            setattr(self, p, rot@p_)
-        self.translate(dx=x, dy=y)
+        self.matrix(
+            +cas.cos(theta / 180 * cas.pi), +cas.sin(theta / 180 * cas.pi),
+            -cas.sin(theta / 180 * cas.pi), +cas.cos(theta / 180 * cas.pi),
+            x, y
+        )
 
     def scale(self, x, y=None):
         if y is None:
             y = x
-        scaler = cas.DM([x, y])
-        for p in self.points:
-            p_ = getattr(self, p)
-            setattr(self, p, p_*scaler)
+        self.matrix(x, 0, 0, y, 0, 0)
 
     def skewX(self, theta):
-        raise NotImplementedError  # TODO
+        tan = cas.tan(theta / 180 * cas.pi)
+        self.matrix(1, 0, tan, 1, 0, 0)
 
     def skewY(self, theta):
-        raise NotImplementedError  # TODO
+        tan = cas.tan(theta / 180 * cas.pi)
+        self.matrix(1, tan, 0, 1, 0, 0)
 
 
 class SymbolicLine(SymbolicElement, Line):
@@ -158,10 +151,11 @@ class SymbolicArc(SymbolicElement, Arc):
         self.radius_scale = base.radius_scale
         self.arc = base.arc
         self.sweep = base.sweep
+        self.transform = cas.DM.eye(2)
         SymbolicElement.__init__(self, base)
         self.points.extend(['center'])
         # radius scales, but e.g. doesn't rotate; thus, not in points attribute
-        self.params.extend(['radius', 'theta', 'delta', 'rotation', 'radius_scale', 'arc', 'sweep'])
+        self.params.extend(['radius', 'theta', 'delta', 'rotation', 'radius_scale', 'arc', 'sweep', 'transform'])
 
     def point(self, s):
         if self.natural_parametrization:
@@ -172,21 +166,18 @@ class SymbolicArc(SymbolicElement, Arc):
         radius = self.radius * self.radius_scale
 
         p = cas.DM(2, 1) if isinstance(s, float) else type(s)(2, 1)
-        p[0] = cosr * cas.cos(angle) * radius[0] - sinr * cas.sin(angle) * radius[1] + self.center[0]
-        p[1] = sinr * cas.cos(angle) * radius[0] + cosr * cas.sin(angle) * radius[1] + self.center[1]
+        p[0] = cosr * cas.cos(angle) * radius[0] - sinr * cas.sin(angle) * radius[1]
+        p[1] = sinr * cas.cos(angle) * radius[0] + cosr * cas.sin(angle) * radius[1]
+        p = self.transform@p + self.center
         return p
 
-    def rotate(self, theta, x=0, y=0):
-        SymbolicElement.rotate(self, theta, x, y)
-        self.rotation = theta
+    def matrix(self, a, b, c, d, e, f):
+        SymbolicElement.matrix(self, a, b, c, d, e, f)
+        rot = cas.vertcat(cas.horzcat(a, c), cas.horzcat(b, d))
+        self.transform = rot@self.transform
 
     def length(self, **kwargs):
         return self.arclength(1.0)
-
-    def scale(self, x, y=None):
-        y = x if y is None else y
-        self.radius = self.radius*cas.DM([x, y])
-        SymbolicElement.scale(self, x, y)
 
 
 class SymbolicMove(SymbolicElement, Move):

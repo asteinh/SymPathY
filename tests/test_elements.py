@@ -65,14 +65,6 @@ class TestArc(Transforms, Elements):
         Elements.test_eq(self, element)
         assert not (element['obj'] == QuadraticBezier(0, 1+1j, 2))
 
-    @pytest.mark.skip(reason="Unclear how to handle attribute 'rotation' when using transformations.")
-    def test_matrix(self, element, theta, dx, dy):
-        pass
-
-    @pytest.mark.skip(reason="Unclear how to handle attribute 'rotation' when using transformations.")
-    def test_rotate(self, element, theta, x, y):
-        pass
-
 
 class TestMove(Transforms, Elements):
     @pytest.fixture(params=[

@@ -8,10 +8,10 @@ import copy
 
 class TestPath(Transforms, Basics):
     @pytest.fixture(params=[
-        # (  # circle
-        #     Arc(0j, 100 + 100j, 0, 0, 0, 200 + 0j),
-        #     Arc(200 + 0j, 100 + 100j, 0, 0, 0, 0j)
-        # ),
+        (  # circle
+            Arc(0j, 100 + 100j, 0, 0, 0, 200 + 0j),
+            Arc(200 + 0j, 100 + 100j, 0, 0, 0, 0j)
+        ),
         (  # some elements
             Line(600 + 350j, 650 + 325j),
             CubicBezier(650 + 325j, 800 + 400j, 750 + 200j, 600 + 100j),

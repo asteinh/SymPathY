@@ -53,6 +53,7 @@ class Transforms():
 
         objA = copy.deepcopy(element['obj'])
         objA.matrix(T[0, 0], T[1, 0], T[0, 1], T[1, 1], delta[0], delta[1])
+
         objB = copy.copy(element['obj'])
         objB.rotate(theta)
         objB.translate(dx, dy)
